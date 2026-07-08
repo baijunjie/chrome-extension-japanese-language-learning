@@ -89,8 +89,7 @@ flowchart LR
   CACHE -- "hit / result" --> SEL
 ```
 
-AI 的契約定義於 `src/shared/schema.ts`（JSON Schema + 解析器）與 `src/shared/prompt.ts`（因應等級的系統提示）。切換服務供應商只需換一個 Base URL。完整設計筆記請見 [`docs/dev-memory/architecture.md`](docs/dev-memory/architecture.md)。
-
+AI 的契約定義於 `src/shared/schema.ts`（JSON Schema + 解析器）與 `src/shared/prompt.ts`（因應等級的系統提示）。切換服務供應商只需換一個 Base URL。
 ## 開發
 
 需要 **pnpm**。

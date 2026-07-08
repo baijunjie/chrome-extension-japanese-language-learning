@@ -89,8 +89,7 @@ flowchart LR
   CACHE -- "hit / result" --> SEL
 ```
 
-AI 계약은 `src/shared/schema.ts`(JSON Schema + 파서)와 `src/shared/prompt.ts`(수준 인식 시스템 프롬프트)에 있습니다. 제공자를 교체하는 것은 단지 다른 Base URL을 쓰는 것뿐입니다. 전체 설계 노트는 [`docs/dev-memory/architecture.md`](docs/dev-memory/architecture.md)를 참조하세요.
-
+AI 계약은 `src/shared/schema.ts`(JSON Schema + 파서)와 `src/shared/prompt.ts`(수준 인식 시스템 프롬프트)에 있습니다. 제공자를 교체하는 것은 단지 다른 Base URL을 쓰는 것뿐입니다.
 ## 개발
 
 **pnpm**이 필요합니다.

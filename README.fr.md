@@ -89,8 +89,7 @@ flowchart LR
   CACHE -- "hit / result" --> SEL
 ```
 
-Le contrat IA se trouve dans `src/shared/schema.ts` (JSON Schema + parseur) et `src/shared/prompt.ts` (prompt système adapté au niveau). Changer de fournisseur revient simplement à utiliser une Base URL différente. Consultez [`docs/dev-memory/architecture.md`](docs/dev-memory/architecture.md) pour les notes de conception complètes.
-
+Le contrat IA se trouve dans `src/shared/schema.ts` (JSON Schema + parseur) et `src/shared/prompt.ts` (prompt système adapté au niveau). Changer de fournisseur revient simplement à utiliser une Base URL différente.
 ## Développement
 
 Nécessite **pnpm**.

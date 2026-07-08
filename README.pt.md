@@ -89,8 +89,7 @@ flowchart LR
   CACHE -- "hit / result" --> SEL
 ```
 
-O contrato da IA reside em `src/shared/schema.ts` (JSON Schema + parser) e `src/shared/prompt.ts` (prompt de sistema ciente do nível). Trocar de provedor é apenas uma Base URL diferente. Consulte [`docs/dev-memory/architecture.md`](docs/dev-memory/architecture.md) para as notas de design completas.
-
+O contrato da IA reside em `src/shared/schema.ts` (JSON Schema + parser) e `src/shared/prompt.ts` (prompt de sistema ciente do nível). Trocar de provedor é apenas uma Base URL diferente.
 ## Desenvolvimento
 
 Requer **pnpm**.

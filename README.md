@@ -89,8 +89,7 @@ flowchart LR
   CACHE -- "hit / result" --> SEL
 ```
 
-The AI contract lives in `src/shared/schema.ts` (JSON Schema + parser) and `src/shared/prompt.ts` (level-aware system prompt). Swapping providers is just a different Base URL. See [`docs/dev-memory/architecture.md`](docs/dev-memory/architecture.md) for the full design notes.
-
+The AI contract lives in `src/shared/schema.ts` (JSON Schema + parser) and `src/shared/prompt.ts` (level-aware system prompt). Swapping providers is just a different Base URL.
 ## Development
 
 Requires **pnpm**.

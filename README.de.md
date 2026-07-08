@@ -89,8 +89,7 @@ flowchart LR
   CACHE -- "hit / result" --> SEL
 ```
 
-Der KI-Vertrag befindet sich in `src/shared/schema.ts` (JSON Schema + Parser) und `src/shared/prompt.ts` (niveaubewusster System-Prompt). Der Wechsel des Anbieters ist nur eine andere Base URL. Siehe [`docs/dev-memory/architecture.md`](docs/dev-memory/architecture.md) für die vollständigen Design-Notizen.
-
+Der KI-Vertrag befindet sich in `src/shared/schema.ts` (JSON Schema + Parser) und `src/shared/prompt.ts` (niveaubewusster System-Prompt). Der Wechsel des Anbieters ist nur eine andere Base URL.
 ## Entwicklung
 
 Erfordert **pnpm**.

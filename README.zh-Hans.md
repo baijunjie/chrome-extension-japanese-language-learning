@@ -89,8 +89,7 @@ flowchart LR
   CACHE -- "hit / result" --> SEL
 ```
 
-AI 契约位于 `src/shared/schema.ts`（JSON Schema + 解析器）和 `src/shared/prompt.ts`（贴合等级的系统提示词）。切换服务商只需换一个 Base URL。完整的设计说明参见 [`docs/dev-memory/architecture.md`](docs/dev-memory/architecture.md)。
-
+AI 契约位于 `src/shared/schema.ts`（JSON Schema + 解析器）和 `src/shared/prompt.ts`（贴合等级的系统提示词）。切换服务商只需换一个 Base URL。
 ## 开发
 
 需要 **pnpm**。

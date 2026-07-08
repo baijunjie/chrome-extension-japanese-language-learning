@@ -89,8 +89,7 @@ flowchart LR
   CACHE -- "hit / result" --> SEL
 ```
 
-Контракт ИИ находится в `src/shared/schema.ts` (JSON Schema + парсер) и `src/shared/prompt.ts` (системный промпт с учётом уровня). Смена провайдеров — это просто другой Base URL. Полные проектные заметки см. в [`docs/dev-memory/architecture.md`](docs/dev-memory/architecture.md).
-
+Контракт ИИ находится в `src/shared/schema.ts` (JSON Schema + парсер) и `src/shared/prompt.ts` (системный промпт с учётом уровня). Смена провайдеров — это просто другой Base URL.
 ## Разработка
 
 Требуется **pnpm**.
