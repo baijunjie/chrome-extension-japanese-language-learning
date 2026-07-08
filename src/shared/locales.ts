@@ -4,7 +4,7 @@
 const zh = {
   appName: '日语阅读助手',
   slogan: '强化你的阅读理解能力',
-  tab: { settings: '设置', review: '复习记录' },
+  tab: { settings: '设置', review: '复习' },
   settings: {
     learner: '学习者',
     nativeLang: '母语（讲解语言 + 界面语言）',
@@ -25,7 +25,7 @@ const zh = {
   },
   jlpt: { entry: '入门（零基础）' },
   review: {
-    title: '复习记录',
+    title: '复习',
     total: '共 {n} 条',
     count: '{n} 条',
     clearAll: '清空全部',
@@ -57,13 +57,14 @@ const zh = {
     delete: '删除',
     retry: '重试',
     all: '全部',
+    version: '版本',
   },
 };
 
 const zhHant = {
   appName: '日語閱讀助手',
   slogan: '強化你的閱讀理解能力',
-  tab: { settings: '設定', review: '複習記錄' },
+  tab: { settings: '設定', review: '複習' },
   settings: {
     learner: '學習者',
     nativeLang: '母語（講解語言 + 介面語言）',
@@ -84,7 +85,7 @@ const zhHant = {
   },
   jlpt: { entry: '入門（零基礎）' },
   review: {
-    title: '複習記錄',
+    title: '複習',
     total: '共 {n} 筆',
     count: '{n} 筆',
     clearAll: '清空全部',
@@ -116,6 +117,7 @@ const zhHant = {
     delete: '刪除',
     retry: '重試',
     all: '全部',
+    version: '版本',
   },
 };
 
@@ -175,6 +177,7 @@ const en = {
     delete: 'Delete',
     retry: 'Retry',
     all: 'All',
+    version: 'Version',
   },
 };
 
@@ -234,6 +237,7 @@ const ko = {
     delete: '삭제',
     retry: '다시 시도',
     all: '전체',
+    version: '버전',
   },
 };
 
@@ -299,6 +303,7 @@ const es = {
     delete: 'Eliminar',
     retry: 'Reintentar',
     all: 'Todos',
+    version: 'Versión',
   },
 };
 
@@ -365,6 +370,7 @@ const fr = {
     delete: 'Supprimer',
     retry: 'Réessayer',
     all: 'Tous',
+    version: 'Version',
   },
 };
 
@@ -430,6 +436,7 @@ const de = {
     delete: 'Löschen',
     retry: 'Erneut versuchen',
     all: 'Alle',
+    version: 'Version',
   },
 };
 
@@ -496,6 +503,7 @@ const pt = {
     delete: 'Excluir',
     retry: 'Tentar de novo',
     all: 'Todos',
+    version: 'Versão',
   },
 };
 
@@ -562,6 +570,7 @@ const ru = {
     delete: 'Удалить',
     retry: 'Повторить',
     all: 'Все',
+    version: 'Версия',
   },
 };
 

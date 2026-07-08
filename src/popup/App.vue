@@ -4,7 +4,10 @@ import SettingsView from './SettingsView.vue';
 
 const { t } = useI18n({ useScope: 'global' });
 
-// 复习记录是独立整页，点击在新的扩展页面打开
+// 当前扩展版本（取自 manifest，即 package.json 的 version）
+const version = chrome.runtime.getManifest().version;
+
+// 复习是独立整页，点击在新的扩展页面打开
 function openReview(): void {
   chrome.runtime.openOptionsPage();
 }
@@ -27,8 +30,12 @@ function openReview(): void {
       </button>
     </header>
 
-    <div class="max-h-[520px] overflow-y-auto p-4">
+    <div class="max-h-[480px] overflow-y-auto p-4">
       <SettingsView />
     </div>
+
+    <footer class="border-t border-gray-200 bg-gray-50 px-4 py-2 text-right text-xs text-gray-400">
+      {{ t('common.version') }} {{ version }}
+    </footer>
   </div>
 </template>
