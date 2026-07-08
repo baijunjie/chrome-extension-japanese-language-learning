@@ -1,0 +1,34 @@
+{
+  "name": "jp-web-learner",
+  "version": "0.1.0",
+  "description": "在网页中学习日语的 Chrome 扩展：划词假名标注、翻译与 JLPT 语法讲解、复习卡片",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node scripts/copy-dict.mjs && vite",
+    "build": "node scripts/copy-dict.mjs && vue-tsc --noEmit && vite build",
+    "type-check": "vue-tsc --noEmit"
+  },
+  "dependencies": {
+    "@sglkc/kuromoji": "^1.1.0",
+    "idb": "^8.0.3",
+    "vue": "^3.5.39",
+    "vue-i18n": "^11.4.6"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild"
+    ]
+  },
+  "devDependencies": {
+    "@crxjs/vite-plugin": "^2.7.1",
+    "@resvg/resvg-js": "^2.6.2",
+    "@tailwindcss/vite": "^4.3.2",
+    "@types/chrome": "^0.2.2",
+    "@vitejs/plugin-vue": "^6.0.7",
+    "tailwindcss": "^4.3.2",
+    "typescript": "^5.7.0",
+    "vite": "^7.3.6",
+    "vue-tsc": "^3.3.7"
+  }
+}

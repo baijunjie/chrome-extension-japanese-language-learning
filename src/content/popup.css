@@ -1,0 +1,230 @@
+/* content script Shadow DOM 内的样式（经 ?inline 注入 shadow root，与宿主页隔离） */
+:host {
+  all: initial;
+}
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+.jpl-icon {
+  position: absolute;
+  z-index: 2147483647;
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 50%;
+  background: #4f46e5;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  font-family: system-ui, -apple-system, 'Hiragino Kaku Gothic ProN', 'Yu Gothic', sans-serif;
+}
+.jpl-icon:hover {
+  background: #4338ca;
+}
+
+.jpl-popup {
+  position: absolute;
+  z-index: 2147483647;
+  max-height: 70vh;
+  overflow-y: auto;
+  background: #fff;
+  color: #1f2937;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
+  font-family: system-ui, -apple-system, 'Hiragino Kaku Gothic ProN', 'Yu Gothic', sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.jpl-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  border-bottom: 1px solid #f0f0f0;
+  position: sticky;
+  top: 0;
+  background: #fff;
+}
+.jpl-title {
+  font-weight: 600;
+  font-size: 13px;
+  color: #4f46e5;
+}
+.jpl-close {
+  border: none;
+  background: none;
+  font-size: 18px;
+  line-height: 1;
+  color: #9ca3af;
+  cursor: pointer;
+  padding: 0 4px;
+}
+.jpl-close:hover {
+  color: #4b5563;
+}
+
+.jpl-body {
+  padding: 14px;
+}
+.jpl-original {
+  font-size: 18px;
+  line-height: 2.1;
+  color: #111827;
+  word-break: break-word;
+}
+.jpl-original ruby rt {
+  font-size: 0.55em;
+  color: #6b7280;
+  font-weight: 400;
+}
+.jpl-muted {
+  color: #9ca3af;
+}
+
+/* AI 分析区 */
+.jpl-analysis {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #f0f0f0;
+}
+.jpl-loading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+}
+.jpl-spinner {
+  width: 14px;
+  height: 14px;
+  flex: none;
+  border: 2px solid #c7d2fe;
+  border-top-color: #4f46e5;
+  border-radius: 50%;
+  animation: jpl-spin 0.7s linear infinite;
+}
+@keyframes jpl-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.jpl-error {
+  color: #dc2626;
+  font-size: 13px;
+}
+.jpl-retry,
+.jpl-save {
+  margin-top: 8px;
+  border: none;
+  border-radius: 6px;
+  background: #4f46e5;
+  color: #fff;
+  font-size: 13px;
+  padding: 6px 12px;
+  cursor: pointer;
+}
+.jpl-retry:hover,
+.jpl-save:hover {
+  background: #4338ca;
+}
+
+/* 主动触发 AI 讲解的按钮（popup 打开后不自动分析，点它才分析） */
+.jpl-analyze {
+  width: 100%;
+  border: none;
+  border-radius: 6px;
+  background: #4f46e5;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+.jpl-analyze:hover {
+  background: #4338ca;
+}
+
+.jpl-section {
+  margin-bottom: 12px;
+}
+/* 翻译/语法/词汇/补充 各区块之间的分割线 */
+.jpl-section + .jpl-section {
+  border-top: 1px solid #f0f0f0;
+  padding-top: 12px;
+}
+.jpl-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: #4f46e5;
+  margin-bottom: 3px;
+}
+.jpl-text {
+  font-size: 13px;
+  color: #374151;
+  line-height: 1.6;
+}
+.jpl-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.jpl-list li {
+  margin-bottom: 8px;
+}
+.jpl-point {
+  font-weight: 600;
+  color: #111827;
+  font-size: 13px;
+}
+.jpl-reading {
+  color: #6b7280;
+  font-size: 12px;
+}
+.jpl-badge {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 0 6px;
+  border-radius: 4px;
+  background: #eef2ff;
+  color: #4f46e5;
+  font-size: 11px;
+  line-height: 1.6;
+  vertical-align: middle;
+}
+
+.jpl-foot {
+  margin-top: 6px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.jpl-foot .jpl-save {
+  margin-top: 0;
+}
+.jpl-saved {
+  font-size: 12px;
+  color: #059669;
+}
+.jpl-reanalyze {
+  border: none;
+  background: none;
+  padding: 0;
+  color: #6b7280;
+  font-size: 12px;
+  cursor: pointer;
+  text-decoration: underline;
+}
+.jpl-reanalyze:hover {
+  color: #4f46e5;
+}

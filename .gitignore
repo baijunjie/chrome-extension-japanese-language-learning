@@ -1,0 +1,7 @@
+node_modules
+dist
+*.log
+.DS_Store
+
+# kuromoji 词典由 scripts/copy-dict.mjs 从 node_modules 生成
+public/assets/dict/
