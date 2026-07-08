@@ -3,8 +3,10 @@ import pkg from './package.json';
 
 export default defineManifest({
   manifest_version: 3,
-  name: '日语阅读助手',
-  description: pkg.description,
+  // 名称/描述走 Chrome i18n（_locales + __MSG__），随浏览器语言显示、保持一致
+  default_locale: 'en',
+  name: '__MSG_appName__',
+  description: '__MSG_appDesc__',
   version: pkg.version,
   icons: {
     16: 'icons/icon-16.png',
@@ -15,7 +17,7 @@ export default defineManifest({
   },
   action: {
     default_popup: 'src/popup/index.html',
-    default_title: '日语阅读助手',
+    default_title: '__MSG_appName__',
     default_icon: {
       16: 'icons/icon-16.png',
       32: 'icons/icon-32.png',
