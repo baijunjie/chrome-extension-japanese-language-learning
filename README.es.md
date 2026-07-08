@@ -12,15 +12,15 @@ Una extensión de Chrome (Manifest V3) para leer japonés en la web. El furigana
 
 ## Características
 
-- **Selecciona para aprender** — resalta texto en japonés y aparecerá junto a él un pequeño botón **あ**; haz clic para abrir un popup dentro de la página (renderizado en un Shadow DOM, aislado de la página anfitriona).
-- **Furigana local instantáneo** — [kuromoji](https://github.com/takuyaa/kuromoji.js) (IPADIC) tokeniza en el navegador y renderiza las lecturas como ruby HTML sobre los kanji. Sin conexión, gratis, sin tokens.
-- **Explicación con IA bajo demanda** — haz clic en **Explain with AI** para obtener la traducción, los puntos gramaticales y el vocabulario. Solo se ejecuta al hacer clic (sin llamadas automáticas), y la IA también devuelve furigana corregido y consciente del contexto que anula la conjetura de kuromoji para kanji ambiguos (p. ej. 「間」→ あいだ, no ま).
-- **Profundidad adaptada al JLPT** — el nivel Principiante explica cada partícula y conjugación básica; N3 asume que se conoce N5–N4 y se centra en gramática de N3 en adelante; N2/N1 solo cubre estructuras avanzadas/idiomáticas.
-- **Salida estructurada y fiable** — el modelo está limitado por un JSON Schema; la salida no analizable se reintenta hasta 3 veces.
-- **Caché y reutilización** — los resultados se almacenan en caché por contenido (texto normalizado + nivel + idioma), de modo que volver a seleccionar la misma frase muestra el análisis guardado al instante; un botón **Re-analyze** fuerza una actualización.
-- **Tarjetas de repaso** — cada explicación se registra (automáticamente, o mediante un botón **Save** cuando el registro automático está desactivado). La página de repaso agrupa las tarjetas por nivel JLPT y las filtra por nivel e idioma de la explicación.
-- **9 idiomas nativos** — 简体中文 / 繁體中文 / English / 한국어 / Español / Français / Deutsch / Português / Русский. Tu idioma nativo es tanto el idioma de la explicación como el de la interfaz (mediante [vue-i18n](https://vue-i18n.intlify.dev/)).
-- **Usa tu propio modelo** — cualquier endpoint compatible con OpenAI, en la nube o local. Los ajustes preestablecidos de proveedores y una prueba de conectividad están integrados en Ajustes.
+- **Selecciona para aprender** — resalta texto en japonés y haz clic en el botón **あ** para abrir un popup dentro de la página.
+- **Furigana instantáneo** — las lecturas en kana aparecen sobre los kanji de inmediato, sin conexión y gratis.
+- **Explicación con IA bajo demanda** — traducción, gramática y vocabulario, generados solo cuando lo pides.
+- **Consciente del JLPT** — las explicaciones se adaptan a tu nivel de japonés, desde principiante hasta N1.
+- **Lecturas precisas** — la IA corrige el furigana para los kanji ambiguos.
+- **Resultados reutilizables** — las frases analizadas se almacenan en caché, con opción de volver a analizar.
+- **Tarjetas de repaso** — explicaciones guardadas, agrupadas por nivel JLPT y filtrables por nivel e idioma.
+- **9 idiomas nativos** — la interfaz y las explicaciones siguen el idioma que elijas.
+- **Usa tu propio modelo** — cualquier endpoint compatible con OpenAI, en la nube o local.
 
 ## Instalación
 
@@ -39,57 +39,24 @@ pnpm build        # outputs to dist/
 
 ## Uso
 
-1. Haz clic en el icono de la barra de herramientas → configura tu **idioma nativo**, tu **nivel JLPT** y un **modelo** (Base URL / Model / API Key). Los endpoints locales (localhost) normalmente no necesitan clave. Usa **Test connection** para verificar. Los ajustes se guardan automáticamente.
-2. En cualquier página, **selecciona texto en japonés** → aparece el botón **あ** → haz clic en él.
-3. El popup muestra el texto con **furigana** de inmediato. Haz clic en **Explain with AI** para obtener el análisis.
-4. Las explicaciones se convierten en tarjetas de repaso. Abre **Review** desde el popup para explorarlas, filtrarlas (nivel / idioma) y eliminarlas.
+1. Haz clic en el icono de la barra de herramientas para abrir **Ajustes**. En **Aprendiz**, elige tu idioma nativo y tu nivel JLPT; en **Model**, introduce un endpoint compatible con OpenAI y prueba la conexión. Los ajustes se guardan automáticamente.
+2. En cualquier página, **selecciona texto en japonés** y haz clic en el botón **あ** que aparece.
+3. El popup muestra el **furigana** de inmediato; haz clic en **Explain with AI** para obtener el análisis.
+4. Las explicaciones se guardan como tarjetas de repaso: abre **Review** desde el popup para explorarlas, filtrarlas (nivel / idioma) y gestionarlas.
 
 ## Modelos
 
 La extensión se comunica con cualquier endpoint `/chat/completions` **compatible con OpenAI**: una sola configuración (`Base URL`, `Model`, `API Key`) cubre tanto la nube como lo local.
 
-| | Example Base URL | API Key |
+| | Base URL de ejemplo | API Key |
 |---|---|---|
-| **Cloud** | `https://api.openai.com/v1`, `https://api.deepseek.com/v1`, `https://dashscope.aliyuncs.com/compatible-mode/v1`, … | required |
-| **Local** | `http://localhost:11434/v1` (Ollama), `http://localhost:1234/v1` (LM Studio) | usually none |
+| **Nube** | `https://api.openai.com/v1`, `https://api.deepseek.com/v1`, `https://dashscope.aliyuncs.com/compatible-mode/v1`, … | obligatoria |
+| **Local** | `http://localhost:11434/v1` (Ollama), `http://localhost:1234/v1` (LM Studio) | normalmente ninguna |
 
-Los ajustes preestablecidos para proveedores comunes están integrados en Ajustes; ambos campos son comboboxes editables, así que puedes escribir cualquier valor. El furigana **no** usa la IA: lo produce localmente kuromoji, por lo que funciona sin conexión y no cuesta nada.
+Los ajustes preestablecidos para proveedores comunes están integrados en Ajustes; ambos campos son comboboxes editables, así que puedes escribir cualquier valor.
 
 > **Nota sobre lo local (Ollama):** la solicitud se origina en el origen de la extensión. Si la prueba de conectividad devuelve un error 403/CORS, permite el origen de la extensión, p. ej. `launchctl setenv OLLAMA_ORIGINS "chrome-extension://*"` y luego reinicia Ollama.
 
-## Privacidad
-
-- El **furigana** se calcula por completo en tu navegador (kuromoji): nada sale de tu máquina.
-- El **análisis con IA** envía el texto seleccionado al endpoint que configures. Un endpoint en la nube significa que el texto se envía a un tercero; un endpoint local lo mantiene en tu máquina.
-- **El almacenamiento es local** — los ajustes en `chrome.storage.local`; las tarjetas de repaso y la caché de análisis en IndexedDB (origen de la extensión). Nada se sube a ningún otro sitio.
-
-## Arquitectura
-
-Manifest V3, construido con **Vue 3 + Vite + [CRXJS](https://crxjs.dev/) + Tailwind CSS + TypeScript**. Cuatro superficies comparten una capa común `src/shared` (tipos, ajustes, almacenamiento, cliente de IA, JSON schema, envoltorio de kuromoji, i18n, mensajería):
-
-- **content script** — detecta las selecciones en japonés, muestra el botón flotante **あ** y monta el popup dentro de un Shadow DOM. Ejecuta kuromoji localmente para el furigana.
-- **service worker** — el único lugar que llama al endpoint de IA (el origen de la extensión elude el CORS de la página). Aplica el JSON schema, reintenta, almacena en caché los resultados y escribe las tarjetas de repaso en IndexedDB.
-- **popup** (barra de herramientas) — todos los ajustes, además de un botón que abre la página de repaso.
-- **options page** — los registros de repaso (agrupados por nivel JLPT, filtrables).
-
-```mermaid
-flowchart LR
-  subgraph PAGE["Web page (content script)"]
-    SEL["select JP → あ button → popup (Shadow DOM)"]
-    FUR["kuromoji → furigana (local, instant)"]
-  end
-  subgraph SW["Service worker"]
-    CACHE["cache lookup (IndexedDB)"]
-    AI["OpenAI-compatible endpoint<br/>JSON schema + retry ×3"]
-    DB["IndexedDB: review cards + cache"]
-  end
-  SEL -- "analyze(text)" --> CACHE
-  CACHE -- miss --> AI
-  AI --> DB
-  CACHE -- "hit / result" --> SEL
-```
-
-El contrato de la IA reside en `src/shared/schema.ts` (JSON Schema + parser) y `src/shared/prompt.ts` (system prompt consciente del nivel). Cambiar de proveedor es solo una Base URL diferente.
 ## Desarrollo
 
 Requiere **pnpm**.

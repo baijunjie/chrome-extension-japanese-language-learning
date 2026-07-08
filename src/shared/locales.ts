@@ -3,7 +3,7 @@
 
 const zh = {
   appName: '日语阅读助手',
-  slogan: '强化你的阅读理解能力',
+  slogan: '提升你的阅读理解能力',
   tab: { settings: '设置', review: '复习' },
   settings: {
     learner: '学习者',
@@ -63,7 +63,7 @@ const zh = {
 
 const zhHant = {
   appName: '日語閱讀助手',
-  slogan: '強化你的閱讀理解能力',
+  slogan: '提升你的閱讀理解能力',
   tab: { settings: '設定', review: '複習' },
   settings: {
     learner: '學習者',
