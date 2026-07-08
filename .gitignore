@@ -3,5 +3,9 @@ dist
 *.log
 .DS_Store
 
+# IDE / 编辑器项目文件
+.idea/
+.vscode/
+
 # kuromoji 词典由 scripts/copy-dict.mjs 从 node_modules 生成
 public/assets/dict/
