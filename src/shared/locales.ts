@@ -40,6 +40,7 @@ const zh = {
   sec: { translation: '翻译', grammar: '语法', vocabulary: '词汇', notes: '补充' },
   popup: {
     title: '日语讲解',
+    speak: '朗读',
     parsing: '解析中…',
     analyzing: 'AI 分析中…',
     analyzeFail: '分析失败：{msg}',
@@ -100,6 +101,7 @@ const zhHant = {
   sec: { translation: '翻譯', grammar: '文法', vocabulary: '詞彙', notes: '補充' },
   popup: {
     title: '日語講解',
+    speak: '朗讀',
     parsing: '解析中…',
     analyzing: 'AI 分析中…',
     analyzeFail: '分析失敗：{msg}',
@@ -160,6 +162,7 @@ const en = {
   sec: { translation: 'Translation', grammar: 'Grammar', vocabulary: 'Vocabulary', notes: 'Notes' },
   popup: {
     title: 'Japanese guide',
+    speak: 'Read aloud',
     parsing: 'Parsing…',
     analyzing: 'Analyzing…',
     analyzeFail: 'Analysis failed: {msg}',
@@ -220,6 +223,7 @@ const ko = {
   sec: { translation: '번역', grammar: '문법', vocabulary: '어휘', notes: '보충' },
   popup: {
     title: '일본어 해설',
+    speak: '소리내어 읽기',
     parsing: '분석 중…',
     analyzing: 'AI 분석 중…',
     analyzeFail: '분석 실패: {msg}',
@@ -286,6 +290,7 @@ const es = {
   },
   popup: {
     title: 'Guía de japonés',
+    speak: 'Leer en voz alta',
     parsing: 'Procesando…',
     analyzing: 'Analizando…',
     analyzeFail: 'Error de análisis: {msg}',
@@ -353,6 +358,7 @@ const fr = {
   },
   popup: {
     title: 'Guide du japonais',
+    speak: 'Lire à voix haute',
     parsing: 'Traitement…',
     analyzing: 'Analyse…',
     analyzeFail: 'Échec de l’analyse : {msg}',
@@ -419,6 +425,7 @@ const de = {
   },
   popup: {
     title: 'Japanisch-Hilfe',
+    speak: 'Vorlesen',
     parsing: 'Verarbeitung…',
     analyzing: 'Analyse…',
     analyzeFail: 'Analyse fehlgeschlagen: {msg}',
@@ -486,6 +493,7 @@ const pt = {
   },
   popup: {
     title: 'Guia de japonês',
+    speak: 'Ler em voz alta',
     parsing: 'Processando…',
     analyzing: 'Analisando…',
     analyzeFail: 'Falha na análise: {msg}',
@@ -553,6 +561,7 @@ const ru = {
   },
   popup: {
     title: 'Разбор японского',
+    speak: 'Озвучить',
     parsing: 'Обработка…',
     analyzing: 'Анализ…',
     analyzeFail: 'Ошибка анализа: {msg}',

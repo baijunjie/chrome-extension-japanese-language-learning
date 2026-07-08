@@ -1,1 +1,6 @@
 @import 'tailwindcss';
+
+/* Tailwind v4 preflight 不再给按钮手形光标，恢复之（禁用态除外） */
+button:not(:disabled) {
+  cursor: pointer;
+}

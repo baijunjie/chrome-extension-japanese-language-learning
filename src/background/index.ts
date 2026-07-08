@@ -71,7 +71,13 @@ async function handlePeekCache(msg: PeekCacheMessage): Promise<PeekReply> {
   const settings = await loadSettings();
   const key = contentKey(msg.text, settings.jlptLevel, settings.nativeLang);
   const analysis = await getCachedAnalysis(key);
-  const savedCardId = await findCardIdByContent(msg.text, settings.jlptLevel, settings.nativeLang);
+  let savedCardId = await findCardIdByContent(msg.text, settings.jlptLevel, settings.nativeLang);
+  // 命中缓存且开启自动记录但尚无卡片时，补存一张（使自动记录对缓存命中同样生效）
+  if (analysis && !savedCardId && settings.autoRecord) {
+    const card = makeCard(msg, analysis, settings);
+    await addCard(card);
+    savedCardId = card.id;
+  }
   return { ok: true, analysis, savedCardId };
 }
 

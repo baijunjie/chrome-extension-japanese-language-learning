@@ -15,6 +15,8 @@ export interface AnalyzeMessage {
 export interface PeekCacheMessage {
   type: 'peekCache';
   text: string;
+  sourceUrl: string;
+  sourceTitle: string;
 }
 
 export interface SaveCardMessage {
@@ -58,8 +60,10 @@ export async function requestAnalyze(msg: Omit<AnalyzeMessage, 'type'>): Promise
   return chrome.runtime.sendMessage({ type: 'analyze', ...msg } satisfies AnalyzeMessage);
 }
 
-export async function requestPeekCache(text: string): Promise<PeekReply> {
-  return chrome.runtime.sendMessage({ type: 'peekCache', text } satisfies PeekCacheMessage);
+export async function requestPeekCache(
+  msg: Omit<PeekCacheMessage, 'type'>,
+): Promise<PeekReply> {
+  return chrome.runtime.sendMessage({ type: 'peekCache', ...msg } satisfies PeekCacheMessage);
 }
 
 export async function requestSaveCard(msg: Omit<SaveCardMessage, 'type'>): Promise<SaveReply> {

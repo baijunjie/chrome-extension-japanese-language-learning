@@ -54,12 +54,27 @@
   border-bottom: 1px solid #f0f0f0;
   position: sticky;
   top: 0;
+  z-index: 2; /* 压住滚动内容（喇叭 opacity 会自成层叠上下文，否则会盖住头部） */
   background: #fff;
 }
 .jpl-title {
   font-weight: 600;
   font-size: 13px;
   color: #4f46e5;
+}
+.jpl-speak {
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 20px;
+  line-height: 1;
+  padding: 0;
+  margin-left: 8px;
+  vertical-align: middle;
+  opacity: 0.8;
+}
+.jpl-speak:hover {
+  opacity: 1;
 }
 .jpl-close {
   border: none;

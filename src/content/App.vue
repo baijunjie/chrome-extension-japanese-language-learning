@@ -7,8 +7,11 @@ import { loadSettings, onSettingsChanged } from '@shared/settings';
 import type { Analysis } from '@shared/types';
 import { useI18n } from 'vue-i18n';
 import { setLocale } from '@shared/i18n';
+import { speakJa, stopSpeaking, ttsSupported } from '@shared/tts';
 
 const { t } = useI18n({ useScope: 'global' });
+
+const canSpeak = ttsSupported();
 
 const POPUP_WIDTH = 380;
 
@@ -49,6 +52,15 @@ function extensionAlive(): boolean {
 
 function openPopup(): void {
   ui.mode = 'popup';
+}
+
+function speak(): void {
+  speakJa(ui.text);
+}
+
+function close(): void {
+  stopSpeaking();
+  resetUi();
 }
 
 async function runFurigana(text: string): Promise<void> {
@@ -98,7 +110,11 @@ async function runAnalyze(text: string, forceRefresh = false): Promise<void> {
 async function peekCache(text: string): Promise<void> {
   if (!extensionAlive()) return;
   try {
-    const reply = await requestPeekCache(text);
+    const reply = await requestPeekCache({
+      text,
+      sourceUrl: location.href,
+      sourceTitle: document.title,
+    });
     if (reply.ok && reply.analysis) {
       ui.analysis = { status: 'done', analysis: reply.analysis, saved: reply.savedCardId !== null };
       applyAiFurigana(reply.analysis);
@@ -124,6 +140,7 @@ watch(
   () => (ui.mode === 'popup' ? ui.text : ''),
   async (text) => {
     if (!text) return;
+    stopSpeaking(); // 换句时停掉上一段朗读
     // 先本地假名，再查缓存；顺序保证缓存命中的 AI 假名不被 kuromoji 结果覆盖
     await runFurigana(text);
     await peekCache(text);
@@ -145,7 +162,7 @@ watch(
   <div v-else-if="ui.mode === 'popup'" class="jpl-popup" :style="popupStyle">
     <div class="jpl-header">
       <span class="jpl-title">{{ t('popup.title') }}</span>
-      <button class="jpl-close" @click="resetUi()">×</button>
+      <button class="jpl-close" @click="close">×</button>
     </div>
 
     <div class="jpl-body">
@@ -159,6 +176,14 @@ watch(
             <span v-else>{{ seg.surface }}</span>
           </template>
         </template>
+        <button
+          v-if="canSpeak && !furiganaLoading"
+          class="jpl-speak"
+          :title="t('popup.speak')"
+          @click="speak"
+        >
+          🔊
+        </button>
       </div>
 
       <!-- AI 分析 -->

@@ -4,8 +4,14 @@ import type { Card, JlptLevel, NativeLang } from '@shared/types';
 import { clearCards, deleteCard, getAllCards } from '@shared/storage';
 import { JLPT_LEVELS, NATIVE_LANGS, NATIVE_LANG_LABELS } from '@shared/settings';
 import { useI18n } from 'vue-i18n';
+import { speakJa, ttsSupported } from '@shared/tts';
 
 const { t } = useI18n({ useScope: 'global' });
+
+const canSpeak = ttsSupported();
+function speakCard(text: string): void {
+  speakJa(text);
+}
 
 const cards = ref<Card[]>([]);
 const loading = ref(true);
@@ -167,7 +173,17 @@ function formatTime(ts: number): string {
                     {{ card.sourceTitle || card.sourceUrl }}
                   </a>
                 </div>
-                <div class="text-base text-gray-900">{{ card.text }}</div>
+                <div class="text-base text-gray-900">
+                  {{ card.text }}
+                  <button
+                    v-if="canSpeak"
+                    class="ml-1.5 cursor-pointer align-middle text-lg opacity-60 hover:opacity-100"
+                    :title="t('popup.speak')"
+                    @click="speakCard(card.text)"
+                  >
+                    🔊
+                  </button>
+                </div>
                 <div class="mt-1 text-sm text-gray-600">{{ card.analysis.translation }}</div>
               </div>
 
