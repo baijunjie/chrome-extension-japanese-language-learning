@@ -1,7 +1,7 @@
 {
   "name": "jp-web-learner",
   "version": "0.1.0",
-  "description": "在网页中学习日语的 Chrome 扩展：划词假名标注、翻译与 JLPT 语法讲解、复习卡片",
+  "description": "Read Japanese on the web with instant furigana and on-demand, JLPT-aware AI explanations, saved as review cards.",
   "private": true,
   "type": "module",
   "scripts": {
