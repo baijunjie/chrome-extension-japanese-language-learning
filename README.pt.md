@@ -6,7 +6,7 @@
 
 > Reforce sua compreensão de leitura — selecione qualquer texto em japonês numa página web para obter furigana instantâneo e uma análise por IA sob demanda e adaptada ao JLPT (tradução, gramática, vocabulário), e transforme o que você estuda em cartões revisáveis.
 
-[Deutsch](README.de.md) · [English](README.md) · [Español](README.es.md) · [Français](README.fr.md) · [한국어](README.ko.md) · **Português** · [Русский](README.ru.md) · [简体中文](README.zh-Hans.md) · [繁體中文](README.zh-Hant.md)
+[Deutsch](README.de.md) · [English](README.md) · [Español](README.es.md) · [Français](README.fr.md) · [한국어](README.ko.md) · **Português** · [Русский](README.ru.md) · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-TW.md)
 
 Uma extensão para Chrome (Manifest V3) para ler japonês na web. O furigana é gerado localmente e de forma instantânea; a explicação por IA é executada somente quando você a solicita e adapta sua profundidade ao seu nível JLPT.
 

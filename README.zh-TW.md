@@ -6,7 +6,7 @@
 
 > 提升你的閱讀理解能力——在網頁上選取任何日語，即可立即取得振假名，以及依需求觸發、因應 JLPT 等級的 AI 拆解（翻譯、文法、詞彙），並把你所學的內容轉化為可複習的卡片。
 
-[Deutsch](README.de.md) · [English](README.md) · [Español](README.es.md) · [Français](README.fr.md) · [한국어](README.ko.md) · [Português](README.pt.md) · [Русский](README.ru.md) · [简体中文](README.zh-Hans.md) · **繁體中文**
+[Deutsch](README.de.md) · [English](README.md) · [Español](README.es.md) · [Français](README.fr.md) · [한국어](README.ko.md) · [Português](README.pt.md) · [Русский](README.ru.md) · [简体中文](README.zh-CN.md) · **繁體中文**
 
 一款用於在網頁上閱讀日語的 Chrome（Manifest V3）擴充功能。振假名在本機即時產生；AI 說明只在你主動要求時才執行，並會依你的 JLPT 等級調整詳盡程度。
 

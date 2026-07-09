@@ -6,7 +6,7 @@
 
 > 提升你的阅读理解能力——在网页上选中任意日语文本，即可即时获得振假名，以及按需生成、贴合 JLPT 等级的 AI 解析（翻译、语法、词汇），并把学到的内容转化为可复习的卡片。
 
-[Deutsch](README.de.md) · [English](README.md) · [Español](README.es.md) · [Français](README.fr.md) · [한국어](README.ko.md) · [Português](README.pt.md) · [Русский](README.ru.md) · **简体中文** · [繁體中文](README.zh-Hant.md)
+[Deutsch](README.de.md) · [English](README.md) · [Español](README.es.md) · [Français](README.fr.md) · [한국어](README.ko.md) · [Português](README.pt.md) · [Русский](README.ru.md) · **简体中文** · [繁體中文](README.zh-TW.md)
 
 一款用于在网页上阅读日语的 Chrome（Manifest V3）扩展。振假名在本地即时生成；AI 解析仅在你主动请求时才运行，并会根据你的 JLPT 等级调整讲解深度。
 

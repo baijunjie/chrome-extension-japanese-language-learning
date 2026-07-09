@@ -6,7 +6,7 @@
 
 > Stärke dein Leseverständnis — markiere beliebiges Japanisch auf einer Webseite, um sofort Furigana zu erhalten, dazu eine bei Bedarf abrufbare, JLPT-bewusste KI-Aufschlüsselung (Übersetzung, Grammatik, Wortschatz), und verwandle das Gelernte in wiederholbare Karten.
 
-**Deutsch** · [English](README.md) · [Español](README.es.md) · [Français](README.fr.md) · [한국어](README.ko.md) · [Português](README.pt.md) · [Русский](README.ru.md) · [简体中文](README.zh-Hans.md) · [繁體中文](README.zh-Hant.md)
+**Deutsch** · [English](README.md) · [Español](README.es.md) · [Français](README.fr.md) · [한국어](README.ko.md) · [Português](README.pt.md) · [Русский](README.ru.md) · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-TW.md)
 
 Eine Chrome-Erweiterung (Manifest V3) zum Lesen von Japanisch im Web. Furigana wird lokal und sofort erzeugt; die KI-Erklärung läuft nur, wenn du sie anforderst, und passt ihre Tiefe an dein JLPT-Niveau an.
 

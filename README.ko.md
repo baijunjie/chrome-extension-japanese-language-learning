@@ -6,7 +6,7 @@
 
 > 읽기 이해력을 강화하세요 — 웹 페이지에서 일본어를 선택하기만 하면 즉시 후리가나와 함께, 요청 시 제공되는 JLPT 수준 맞춤 AI 분석(번역, 문법, 어휘)을 받아보고, 학습한 내용을 복습 카드로 전환할 수 있습니다.
 
-[Deutsch](README.de.md) · [English](README.md) · [Español](README.es.md) · [Français](README.fr.md) · **한국어** · [Português](README.pt.md) · [Русский](README.ru.md) · [简体中文](README.zh-Hans.md) · [繁體中文](README.zh-Hant.md)
+[Deutsch](README.de.md) · [English](README.md) · [Español](README.es.md) · [Français](README.fr.md) · **한국어** · [Português](README.pt.md) · [Русский](README.ru.md) · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-TW.md)
 
 웹에서 일본어를 읽기 위한 Chrome(Manifest V3) 확장 프로그램입니다. 후리가나는 로컬에서 즉시 생성되며, AI 설명은 요청할 때만 실행되고 사용자의 JLPT 수준에 맞춰 상세도가 조정됩니다.
 

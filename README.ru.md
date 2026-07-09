@@ -6,7 +6,7 @@
 
 > Развивайте навык понимания прочитанного — выделите любой японский текст на веб-странице, чтобы мгновенно получить фуригану, а также разбор от ИИ по запросу с учётом уровня JLPT (перевод, грамматика, лексика), и превращайте изученное в карточки для повторения.
 
-[Deutsch](README.de.md) · [English](README.md) · [Español](README.es.md) · [Français](README.fr.md) · [한국어](README.ko.md) · [Português](README.pt.md) · **Русский** · [简体中文](README.zh-Hans.md) · [繁體中文](README.zh-Hant.md)
+[Deutsch](README.de.md) · [English](README.md) · [Español](README.es.md) · [Français](README.fr.md) · [한국어](README.ko.md) · [Português](README.pt.md) · **Русский** · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-TW.md)
 
 Расширение для Chrome (Manifest V3) для чтения японских текстов в интернете. Фуригана генерируется локально и мгновенно; объяснение от ИИ выполняется только по вашему запросу и подстраивает уровень детализации под ваш уровень JLPT.
 

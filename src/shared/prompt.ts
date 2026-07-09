@@ -10,8 +10,8 @@ const NATIVE_LANG_NAMES: Record<NativeLang, string> = {
   ko: '한국어',
   pt: 'Português',
   ru: 'Русский',
-  zh: '简体中文',
-  'zh-Hant': '繁體中文（台灣正體）',
+  'zh-CN': '简体中文',
+  'zh-TW': '繁體中文（台灣正體）',
 };
 
 // 学习者水平差异化指令：明确规定"讲什么/跳什么/多细"，让不同等级的输出有明显区别。

@@ -1,7 +1,7 @@
 // 全局共享类型定义。
 
 /** 用户母语（讲解输出语言 + 界面语言）。日语是学习目标，不作为母语。 */
-export type NativeLang = 'de' | 'en' | 'es' | 'fr' | 'ko' | 'pt' | 'ru' | 'zh' | 'zh-Hant';
+export type NativeLang = 'de' | 'en' | 'es' | 'fr' | 'ko' | 'pt' | 'ru' | 'zh-CN' | 'zh-TW';
 
 /** 学习等级：entry(入门/零基础，N5 之下) 为最低，N5→N1 递增 */
 export type JlptLevel = 'entry' | 'N5' | 'N4' | 'N3' | 'N2' | 'N1';

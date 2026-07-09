@@ -6,7 +6,7 @@
 
 > Strengthen your reading comprehension — select any Japanese on a web page to get instant furigana plus an on-demand, JLPT-aware AI breakdown (translation, grammar, vocabulary), and turn what you study into reviewable cards.
 
-[Deutsch](README.de.md) · **English** · [Español](README.es.md) · [Français](README.fr.md) · [한국어](README.ko.md) · [Português](README.pt.md) · [Русский](README.ru.md) · [简体中文](README.zh-Hans.md) · [繁體中文](README.zh-Hant.md)
+[Deutsch](README.de.md) · **English** · [Español](README.es.md) · [Français](README.fr.md) · [한국어](README.ko.md) · [Português](README.pt.md) · [Русский](README.ru.md) · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-TW.md)
 
 A Chrome (Manifest V3) extension for reading Japanese on the web. Furigana is generated locally and instantly; the AI explanation runs only when you ask for it and adapts its depth to your JLPT level.
 

@@ -12,8 +12,8 @@ export const NATIVE_LANGS: NativeLang[] = [
   'ko',
   'pt',
   'ru',
-  'zh',
-  'zh-Hant',
+  'zh-CN',
+  'zh-TW',
 ];
 // 语言名用各自母语书写（endonym），不随 UI 语言变化
 export const NATIVE_LANG_LABELS: Record<NativeLang, string> = {
@@ -24,8 +24,8 @@ export const NATIVE_LANG_LABELS: Record<NativeLang, string> = {
   ko: '한국어',
   pt: 'Português',
   ru: 'Русский',
-  zh: '简体中文',
-  'zh-Hant': '繁體中文',
+  'zh-CN': '简体中文',
+  'zh-TW': '繁體中文',
 };
 
 // 由低到高；entry 为入门（零基础），默认值
@@ -40,7 +40,7 @@ export const JLPT_LABELS: Record<JlptLevel, string> = {
 };
 
 /** 默认英语；若浏览器偏好语言（按其优先级顺序）命中支持项则选中它 */
-function detectNativeLang(): NativeLang {
+export function detectNativeLang(): NativeLang {
   const prefs = (
     (typeof navigator !== 'undefined' && navigator.languages?.length
       ? navigator.languages
@@ -49,7 +49,7 @@ function detectNativeLang(): NativeLang {
   for (const pref of prefs) {
     // 中文按繁简区分：含 hant 或港澳台地区码归繁体，其余归简体
     if (pref.startsWith('zh')) {
-      return /hant|tw|hk|mo/.test(pref) ? 'zh-Hant' : 'zh';
+      return /hant|tw|hk|mo/.test(pref) ? 'zh-TW' : 'zh-CN';
     }
     const base = pref.split('-')[0];
     const hit = NATIVE_LANGS.find((l) => l === base);
