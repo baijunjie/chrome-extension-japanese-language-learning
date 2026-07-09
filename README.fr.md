@@ -14,7 +14,9 @@ Une extension Chrome (Manifest V3) pour lire le japonais sur le web. Les furigan
 
 - **Sélectionner pour apprendre** — surlignez un texte japonais et cliquez sur le bouton **あ** pour ouvrir une fenêtre contextuelle dans la page.
 - **Furigana instantanés** — les lectures en kana apparaissent aussitôt au-dessus des kanji, hors ligne et gratuitement.
+- **Traduction instantanée** — une traduction approximative gratuite exécutée sur l'appareil (le traducteur intégré de Chrome) s'affiche immédiatement, remplacée par celle de l'IA lorsque vous la demandez.
 - **Explication IA à la demande** — traduction, grammaire et vocabulaire, générées uniquement lorsque vous le demandez.
+- **Lecture à voix haute** — écoutez la phrase sélectionnée lue par une voix intégrée.
 - **Adaptée au JLPT** — les explications s'adaptent à votre niveau de japonais, du débutant au N1.
 - **Lectures exactes** — l'IA corrige les furigana pour les kanji ambigus.
 - **Résultats réutilisables** — les phrases analysées sont mises en cache, avec une option de réanalyse.
@@ -70,3 +72,4 @@ pnpm type-check   # vue-tsc
 
 - **Dictionnaire de furigana** — `scripts/copy-dict.mjs` copie le dictionnaire kuromoji depuis `node_modules` vers `public/assets/dict/` avant le dev/build (~19 Mo, non commité).
 - **Icônes** — modifiez `icons/icon.svg`, puis exécutez `node scripts/generate-icons.mjs` pour régénérer les PNG (les icônes d'extension Chrome doivent être matricielles).
+- **Empaquetage** — `pnpm zip` compile et compresse `dist/` dans un zip d'installation versionné (chargez-le via « Charger l'extension non empaquetée »).

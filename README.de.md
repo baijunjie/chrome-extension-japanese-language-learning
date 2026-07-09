@@ -14,7 +14,9 @@ Eine Chrome-Erweiterung (Manifest V3) zum Lesen von Japanisch im Web. Furigana w
 
 - **Markieren zum Lernen** — hebe japanischen Text hervor und klicke auf die **あ**-Schaltfläche, um ein Popup direkt auf der Seite zu öffnen.
 - **Sofortige Furigana** — Kana-Lesungen erscheinen umgehend über den Kanji, offline und kostenlos.
+- **Sofortige Übersetzung** — eine kostenlose, grobe Übersetzung direkt auf dem Gerät (Chromes eingebauter Übersetzer) erscheint sofort und wird durch die der KI ersetzt, sobald du sie anforderst.
 - **KI-Erklärung auf Abruf** — Übersetzung, Grammatik und Wortschatz, nur erzeugt, wenn du sie anforderst.
+- **Vorlesen** — höre den markierten Satz, vorgelesen von einer eingebauten Stimme.
 - **JLPT-bewusst** — Erklärungen passen sich deinem Japanisch-Niveau an, von Anfänger bis N1.
 - **Genaue Lesungen** — die KI korrigiert Furigana bei mehrdeutigen Kanji.
 - **Wiederverwendbare Ergebnisse** — analysierte Sätze werden zwischengespeichert, mit der Möglichkeit zur erneuten Analyse.
@@ -70,3 +72,4 @@ pnpm type-check   # vue-tsc
 
 - **Furigana-Wörterbuch** — `scripts/copy-dict.mjs` kopiert das kuromoji-Wörterbuch aus `node_modules` nach `public/assets/dict/` vor dev/build (~19 MB, nicht eingecheckt).
 - **Symbole** — bearbeite `icons/icon.svg` und führe dann `node scripts/generate-icons.mjs` aus, um die PNGs neu zu erzeugen (Chrome-Erweiterungssymbole müssen Rastergrafiken sein).
+- **Paket** — `pnpm zip` baut `dist/` und packt es in ein versioniertes Installations-Zip (lade es über „Entpackte Erweiterung laden“).
