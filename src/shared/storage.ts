@@ -71,6 +71,14 @@ export async function clearCards(): Promise<void> {
   await db.clear(CARDS);
 }
 
+/** 批量删除指定卡片（单事务） */
+export async function deleteCards(ids: string[]): Promise<void> {
+  if (!ids.length) return;
+  const db = await getDb();
+  const tx = db.transaction(CARDS, 'readwrite');
+  await Promise.all([...ids.map((id) => tx.store.delete(id)), tx.done]);
+}
+
 /** 查找与给定内容（原文 + 等级 + 母语）匹配的卡片 id，用于判断"是否已记录" */
 export async function findCardIdByContent(
   text: string,
