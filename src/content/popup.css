@@ -92,6 +92,12 @@
 .jpl-body {
   padding: 14px;
 }
+/* 统一分割线：相邻可见块之间自动加分隔线；内容块自身不带 border，便于增删/重排 */
+.jpl-body > * + * {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #f0f0f0;
+}
 .jpl-original {
   font-size: 18px;
   line-height: 2.1;
@@ -107,12 +113,18 @@
   color: #9ca3af;
 }
 
-/* AI 分析区 */
-.jpl-analysis {
-  margin-top: 12px;
-  padding-top: 12px;
-  border-top: 1px solid #f0f0f0;
+/* 翻译常驻区（速译 / AI 译文） */
+.jpl-trans-src {
+  margin-left: 6px;
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0;
+  color: #9ca3af;
 }
+.jpl-trans-loading {
+  font-size: 13px;
+}
+
 .jpl-loading {
   display: flex;
   align-items: center;
@@ -169,14 +181,6 @@
   background: #4338ca;
 }
 
-.jpl-section {
-  margin-bottom: 12px;
-}
-/* 翻译/语法/词汇/补充 各区块之间的分割线 */
-.jpl-section + .jpl-section {
-  border-top: 1px solid #f0f0f0;
-  padding-top: 12px;
-}
 .jpl-label {
   font-size: 11px;
   font-weight: 700;
@@ -219,13 +223,14 @@
 }
 
 .jpl-foot {
-  margin-top: 6px;
   display: flex;
   align-items: center;
   gap: 12px;
 }
 .jpl-foot .jpl-save {
   margin-top: 0;
+  font-size: 12px;
+  padding: 4px 10px;
 }
 .jpl-saved {
   font-size: 12px;

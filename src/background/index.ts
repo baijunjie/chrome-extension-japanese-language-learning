@@ -2,10 +2,10 @@
 import { analyze } from '@shared/ai';
 import {
   addCard,
+  deleteCard,
   findCardIdByContent,
   getCachedAnalysis,
   putCachedAnalysis,
-  updateCardAnalysis,
 } from '@shared/storage';
 import { loadSettings } from '@shared/settings';
 import { normalizeContent } from '@shared/text';
@@ -54,11 +54,13 @@ async function handleAnalyze(msg: AnalyzeMessage): Promise<AnalyzeReply> {
     await putCachedAnalysis(key, analysis);
   }
 
-  // 保存状态：已有卡片优先；强制重分析时同步更新卡片内容
   let savedCardId = await findCardIdByContent(msg.text, settings.jlptLevel, settings.nativeLang);
-  if (savedCardId) {
-    if (msg.forceRefresh) await updateCardAnalysis(savedCardId, analysis);
-  } else if (settings.autoRecord) {
+  // 重新分析：先清除该内容的旧复习记录，再按下面的自动记录设置重新落一张新卡
+  if (msg.forceRefresh && savedCardId) {
+    await deleteCard(savedCardId);
+    savedCardId = null;
+  }
+  if (savedCardId === null && settings.autoRecord) {
     const card = makeCard(msg, analysis, settings);
     await addCard(card);
     savedCardId = card.id;

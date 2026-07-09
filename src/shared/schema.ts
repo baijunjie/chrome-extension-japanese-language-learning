@@ -19,7 +19,10 @@ export const ANALYSIS_JSON_SCHEMA = {
         properties: {
           point: { type: 'string', description: '语法形式，如「〜ている」' },
           explanation: { type: 'string', description: '用母语讲解该语法的含义与用法' },
-          level: { type: 'string', description: 'JLPT 等级，如 N5' },
+          level: {
+            type: 'string',
+            description: '该语法点本身固有的 JLPT 等级（N5–N1），与用户所选等级无关',
+          },
         },
       },
     },

@@ -4,14 +4,21 @@ import { ui, resetUi } from './store';
 import { initTokenizer, toFuriganaSegments, type FuriganaSegment } from '@shared/furigana';
 import { requestAnalyze, requestPeekCache, requestSaveCard } from '@shared/messaging';
 import { loadSettings, onSettingsChanged } from '@shared/settings';
-import type { Analysis } from '@shared/types';
+import type { Analysis, NativeLang } from '@shared/types';
 import { useI18n } from 'vue-i18n';
 import { setLocale } from '@shared/i18n';
 import { speakJa, stopSpeaking, ttsSupported } from '@shared/tts';
+import { builtinTranslatorSupported, translateJaTo } from '@shared/translator';
 
 const { t } = useI18n({ useScope: 'global' });
 
 const canSpeak = ttsSupported();
+
+// 用户母语（内置翻译的目标语言）
+const nativeLang = ref<NativeLang>('en');
+// 免费"速译"：AI 分析前的占位翻译（浏览器内置端上翻译）
+const freeTranslation = ref('');
+const freeTranslating = ref(false);
 
 const POPUP_WIDTH = 380;
 
@@ -22,9 +29,13 @@ const furiganaError = ref('');
 // 界面语言跟随母语设置
 onMounted(async () => {
   const settings = await loadSettings();
+  nativeLang.value = settings.nativeLang;
   setLocale(settings.nativeLang);
 });
-onSettingsChanged((s) => setLocale(s.nativeLang));
+onSettingsChanged((s) => {
+  nativeLang.value = s.nativeLang;
+  setLocale(s.nativeLang);
+});
 
 const iconStyle = computed(() => ({
   top: `${ui.rect.bottom + 4}px`,
@@ -45,6 +56,11 @@ const popupStyle = computed(() => {
 const analysis = computed(() => (ui.analysis.status === 'done' ? ui.analysis.analysis : null));
 const saved = computed(() => ui.analysis.status === 'done' && ui.analysis.saved);
 
+// 翻译展示：有 AI 译文优先用 AI 的，否则用免费速译
+const aiTranslation = computed(() => analysis.value?.translation ?? '');
+const displayTranslation = computed(() => aiTranslation.value || freeTranslation.value);
+const showFreeTag = computed(() => !aiTranslation.value && !!freeTranslation.value);
+
 // 内容脚本上下文是否仍有效：扩展重载后，旧页面里的 chrome.runtime 会失效
 function extensionAlive(): boolean {
   return typeof chrome !== 'undefined' && !!chrome.runtime && !!chrome.runtime.id;
@@ -61,6 +77,18 @@ function speak(): void {
 function close(): void {
   stopSpeaking();
   resetUi();
+}
+
+// 免费速译：AI 前的占位（浏览器内置端上翻译）；不可用则不显示（降级）
+async function runFreeTranslate(text: string): Promise<void> {
+  freeTranslation.value = '';
+  if (!builtinTranslatorSupported()) return;
+  freeTranslating.value = true;
+  try {
+    freeTranslation.value = (await translateJaTo(text, nativeLang.value)) ?? '';
+  } finally {
+    freeTranslating.value = false;
+  }
 }
 
 async function runFurigana(text: string): Promise<void> {
@@ -141,6 +169,7 @@ watch(
   async (text) => {
     if (!text) return;
     stopSpeaking(); // 换句时停掉上一段朗读
+    void runFreeTranslate(text); // 免费速译（并行，不阻塞假名）
     // 先本地假名，再查缓存；顺序保证缓存命中的 AI 假名不被 kuromoji 结果覆盖
     await runFurigana(text);
     await peekCache(text);
@@ -186,69 +215,73 @@ watch(
         </button>
       </div>
 
-      <!-- AI 分析 -->
-      <div class="jpl-analysis">
-        <button
-          v-if="ui.analysis.status === 'idle'"
-          class="jpl-analyze"
-          @click="runAnalyze(ui.text)"
-        >
-          {{ t('popup.analyze') }}
-        </button>
-
-        <div v-else-if="ui.analysis.status === 'loading'" class="jpl-loading">
-          <span class="jpl-spinner"></span>
-          <span class="jpl-muted">{{ t('popup.analyzing') }}</span>
+      <!-- 翻译：常驻；有 AI 译文用 AI 的，否则显示内置速译 -->
+      <div v-if="displayTranslation || freeTranslating" class="jpl-trans">
+        <div class="jpl-label">
+          {{ t('sec.translation') }}
+          <span v-if="showFreeTag" class="jpl-trans-src">{{ t('popup.builtinTrans') }}</span>
         </div>
-
-        <div v-else-if="ui.analysis.status === 'error'" class="jpl-error">
-          <div>{{ t('popup.analyzeFail', { msg: ui.analysis.message }) }}</div>
-          <button class="jpl-retry" @click="runAnalyze(ui.text)">{{ t('common.retry') }}</button>
-        </div>
-
-        <template v-else-if="analysis">
-          <div class="jpl-section">
-            <div class="jpl-label">{{ t('sec.translation') }}</div>
-            <div class="jpl-text">{{ analysis.translation }}</div>
-          </div>
-
-          <div v-if="analysis.grammar_points.length" class="jpl-section">
-            <div class="jpl-label">{{ t('sec.grammar') }}</div>
-            <ul class="jpl-list">
-              <li v-for="(g, i) in analysis.grammar_points" :key="i">
-                <span class="jpl-point">{{ g.point }}</span>
-                <span v-if="g.level" class="jpl-badge">{{ g.level }}</span>
-                <div class="jpl-text">{{ g.explanation }}</div>
-              </li>
-            </ul>
-          </div>
-
-          <div v-if="analysis.vocabulary.length" class="jpl-section">
-            <div class="jpl-label">{{ t('sec.vocabulary') }}</div>
-            <ul class="jpl-list">
-              <li v-for="(v, i) in analysis.vocabulary" :key="i">
-                <span class="jpl-point">{{ v.word }}</span>
-                <span v-if="v.reading" class="jpl-reading">［{{ v.reading }}］</span>
-                <span v-if="v.pos" class="jpl-badge">{{ v.pos }}</span>
-                <span class="jpl-text"> {{ v.meaning }}</span>
-              </li>
-            </ul>
-          </div>
-
-          <div v-if="analysis.notes" class="jpl-section">
-            <div class="jpl-label">{{ t('sec.notes') }}</div>
-            <div class="jpl-text">{{ analysis.notes }}</div>
-          </div>
-
-          <div class="jpl-foot">
-            <span v-if="saved" class="jpl-saved">{{ t('popup.saved') }}</span>
-            <button v-else class="jpl-save" @click="save">{{ t('popup.save') }}</button>
-            <button class="jpl-reanalyze" @click="runAnalyze(ui.text, true)">
-              {{ t('popup.reanalyze') }}
-            </button>
-          </div>
-        </template>
+        <div v-if="displayTranslation" class="jpl-text">{{ displayTranslation }}</div>
+        <div v-else class="jpl-muted jpl-trans-loading">{{ t('popup.parsing') }}</div>
       </div>
+
+      <!-- AI 分析：idle / loading / error / done。各块均为 jpl-body 直接子元素，
+           分割线由 `.jpl-body > * + *` 统一处理，块自身不带 border -->
+      <button
+        v-if="ui.analysis.status === 'idle'"
+        class="jpl-analyze"
+        @click="runAnalyze(ui.text)"
+      >
+        {{ t('popup.analyze') }}
+      </button>
+
+      <div v-else-if="ui.analysis.status === 'loading'" class="jpl-loading">
+        <span class="jpl-spinner"></span>
+        <span class="jpl-muted">{{ t('popup.analyzing') }}</span>
+      </div>
+
+      <div v-else-if="ui.analysis.status === 'error'" class="jpl-error">
+        <div>{{ t('popup.analyzeFail', { msg: ui.analysis.message }) }}</div>
+        <button class="jpl-retry" @click="runAnalyze(ui.text)">{{ t('common.retry') }}</button>
+      </div>
+
+      <template v-else-if="analysis">
+        <div v-if="analysis.grammar_points.length" class="jpl-section">
+          <div class="jpl-label">{{ t('sec.grammar') }}</div>
+          <ul class="jpl-list">
+            <li v-for="(g, i) in analysis.grammar_points" :key="i">
+              <span class="jpl-point">{{ g.point }}</span>
+              <span v-if="g.level" class="jpl-badge">{{ g.level }}</span>
+              <div class="jpl-text">{{ g.explanation }}</div>
+            </li>
+          </ul>
+        </div>
+
+        <div v-if="analysis.vocabulary.length" class="jpl-section">
+          <div class="jpl-label">{{ t('sec.vocabulary') }}</div>
+          <ul class="jpl-list">
+            <li v-for="(v, i) in analysis.vocabulary" :key="i">
+              <span class="jpl-point">{{ v.word }}</span>
+              <span v-if="v.reading" class="jpl-reading">［{{ v.reading }}］</span>
+              <span v-if="v.pos" class="jpl-badge">{{ v.pos }}</span>
+              <span class="jpl-text"> {{ v.meaning }}</span>
+            </li>
+          </ul>
+        </div>
+
+        <div v-if="analysis.notes" class="jpl-section">
+          <div class="jpl-label">{{ t('sec.notes') }}</div>
+          <div class="jpl-text">{{ analysis.notes }}</div>
+        </div>
+
+        <div class="jpl-foot">
+          <span v-if="saved" class="jpl-saved">{{ t('popup.saved') }}</span>
+          <button v-else class="jpl-save" @click="save">{{ t('popup.save') }}</button>
+          <button class="jpl-reanalyze" @click="runAnalyze(ui.text, true)">
+            {{ t('popup.reanalyze') }}
+          </button>
+        </div>
+      </template>
     </div>
   </div>
 </template>

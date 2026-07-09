@@ -71,15 +71,6 @@ export async function clearCards(): Promise<void> {
   await db.clear(CARDS);
 }
 
-export async function updateCardAnalysis(id: string, analysis: Analysis): Promise<void> {
-  const db = await getDb();
-  const card = await db.get(CARDS, id);
-  if (card) {
-    card.analysis = analysis;
-    await db.put(CARDS, card);
-  }
-}
-
 /** 查找与给定内容（原文 + 等级 + 母语）匹配的卡片 id，用于判断"是否已记录" */
 export async function findCardIdByContent(
   text: string,

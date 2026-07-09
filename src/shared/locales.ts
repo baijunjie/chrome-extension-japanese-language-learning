@@ -47,6 +47,7 @@ const de = {
   popup: {
     title: 'Japanisch-Hilfe',
     speak: 'Vorlesen',
+    builtinTrans: 'Browser-Übersetzung',
     parsing: 'Verarbeitung…',
     analyzing: 'Analyse…',
     analyzeFail: 'Analyse fehlgeschlagen: {msg}',
@@ -108,6 +109,7 @@ const en = {
   popup: {
     title: 'Japanese guide',
     speak: 'Read aloud',
+    builtinTrans: 'Browser translation',
     parsing: 'Parsing…',
     analyzing: 'Analyzing…',
     analyzeFail: 'Analysis failed: {msg}',
@@ -175,6 +177,7 @@ const es = {
   popup: {
     title: 'Guía de japonés',
     speak: 'Leer en voz alta',
+    builtinTrans: 'Traducción del navegador',
     parsing: 'Procesando…',
     analyzing: 'Analizando…',
     analyzeFail: 'Error de análisis: {msg}',
@@ -243,6 +246,7 @@ const fr = {
   popup: {
     title: 'Guide du japonais',
     speak: 'Lire à voix haute',
+    builtinTrans: 'Traduction du navigateur',
     parsing: 'Traitement…',
     analyzing: 'Analyse…',
     analyzeFail: 'Échec de l’analyse : {msg}',
@@ -304,6 +308,7 @@ const ko = {
   popup: {
     title: '일본어 해설',
     speak: '소리내어 읽기',
+    builtinTrans: '브라우저 내장 번역',
     parsing: '분석 중…',
     analyzing: 'AI 분석 중…',
     analyzeFail: '분석 실패: {msg}',
@@ -372,6 +377,7 @@ const pt = {
   popup: {
     title: 'Guia de japonês',
     speak: 'Ler em voz alta',
+    builtinTrans: 'Tradução do navegador',
     parsing: 'Processando…',
     analyzing: 'Analisando…',
     analyzeFail: 'Falha na análise: {msg}',
@@ -440,6 +446,7 @@ const ru = {
   popup: {
     title: 'Разбор японского',
     speak: 'Озвучить',
+    builtinTrans: 'Перевод браузера',
     parsing: 'Обработка…',
     analyzing: 'Анализ…',
     analyzeFail: 'Ошибка анализа: {msg}',
@@ -501,6 +508,7 @@ const zhCN = {
   popup: {
     title: '日语讲解',
     speak: '朗读',
+    builtinTrans: '浏览器内置翻译',
     parsing: '解析中…',
     analyzing: 'AI 分析中…',
     analyzeFail: '分析失败：{msg}',
@@ -562,6 +570,7 @@ const zhTW = {
   popup: {
     title: '日語講解',
     speak: '朗讀',
+    builtinTrans: '瀏覽器內建翻譯',
     parsing: '解析中…',
     analyzing: 'AI 分析中…',
     analyzeFail: '分析失敗：{msg}',
