@@ -1,16 +1,11 @@
 // 构造 AI 系统/用户提示词：强制 JSON 输出格式，讲解语言=母语，深度=JLPT 等级。
 import type { AppSettings, NativeLang } from './types';
 import { ANALYSIS_JSON_SCHEMA } from './schema';
+import { NATIVE_LANG_LABELS } from './settings';
 
+// 提示词中的语言名与 UI 语言名共用一份；zh-TW 需限定「台灣正體」以约束模型用字
 const NATIVE_LANG_NAMES: Record<NativeLang, string> = {
-  de: 'Deutsch',
-  en: 'English',
-  es: 'Español',
-  fr: 'Français',
-  ko: '한국어',
-  pt: 'Português',
-  ru: 'Русский',
-  'zh-CN': '简体中文',
+  ...NATIVE_LANG_LABELS,
   'zh-TW': '繁體中文（台灣正體）',
 };
 

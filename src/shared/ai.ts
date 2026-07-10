@@ -102,6 +102,6 @@ export async function analyze(text: string, settings: AppSettings): Promise<Anal
 export async function testConnection(settings: AppSettings): Promise<void> {
   const { baseURL, apiKey, model } = settings.model;
   if (!baseURL || !model) throw new Error('请先填写 baseURL 与 model');
-  const url = endpointUrl(settings.model.baseURL);
+  const url = endpointUrl(baseURL);
   await callChatOnce(url, apiKey, model, [{ role: 'user', content: 'ping，请回复 ok' }], false);
 }

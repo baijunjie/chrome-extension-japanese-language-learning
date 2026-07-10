@@ -7,6 +7,8 @@ import { clearCards, deleteCard, deleteCards, getAllCards } from '@shared/storag
 import { JLPT_LEVELS, NATIVE_LANGS, NATIVE_LANG_LABELS } from '@shared/settings';
 import { useI18n } from 'vue-i18n';
 import { speakJa, ttsSupported } from '@shared/tts';
+import FuriganaText from '@shared/FuriganaText.vue';
+import ReviewListRow, { type Row } from './ReviewListRow.vue';
 
 const { t } = useI18n({ useScope: 'global' });
 const canSpeak = ttsSupported();
@@ -45,9 +47,6 @@ const filteredCards = computed(() =>
 const hasFilter = computed(() => filterLevel.value !== 'all' || filterLang.value !== 'all');
 
 // 按等级分组后拍平成行（表头行 / 卡片行），供虚拟列表消费
-type Row =
-  | { type: 'header'; id: string; label: string; count: number }
-  | { type: 'card'; id: string; card: Card };
 const rows = computed<Row[]>(() => {
   const out: Row[] = [];
   for (const level of JLPT_LEVELS) {
@@ -123,9 +122,6 @@ onMounted(async () => {
   loading.value = false;
 });
 
-function speakCard(text: string): void {
-  speakJa(text);
-}
 async function remove(id: string): Promise<void> {
   await deleteCard(id);
   await reload();
@@ -141,9 +137,6 @@ async function clearCurrent(): Promise<void> {
   await deleteCards(filteredCards.value.map((c) => c.id));
   confirming.value = null;
   await reload();
-}
-function formatTime(ts: number): string {
-  return new Date(ts).toLocaleString();
 }
 </script>
 
@@ -233,50 +226,11 @@ function formatTime(ts: number): string {
               transform: `translateY(${vr.start}px)`,
             }"
           >
-            <!-- 表头行 -->
-            <h3
-              v-if="rows[vr.index].type === 'header'"
-              class="flex items-center gap-2 pb-2 pt-3"
-            >
-              <span class="rounded bg-indigo-600 px-2 py-0.5 text-xs font-medium text-white">
-                {{ (rows[vr.index] as { label: string }).label }}
-              </span>
-              <span class="text-xs text-gray-400">
-                {{ t('review.count', { n: (rows[vr.index] as { count: number }).count }) }}
-              </span>
-            </h3>
-
-            <!-- 卡片行 -->
-            <div v-else class="pb-1.5">
-              <button
-                class="w-full cursor-pointer rounded-lg border px-3 py-2 text-left transition"
-                :class="
-                  rows[vr.index].id === selectedId
-                    ? 'border-indigo-400 bg-indigo-50'
-                    : 'border-gray-200 bg-white hover:border-gray-300'
-                "
-                @click="selectedId = rows[vr.index].id"
-              >
-                <div class="mb-0.5 truncate text-xs text-gray-400">
-                  {{ formatTime((rows[vr.index] as { card: Card }).card.createdAt)
-                  }}<template
-                    v-if="
-                      (rows[vr.index] as { card: Card }).card.sourceTitle ||
-                      (rows[vr.index] as { card: Card }).card.sourceUrl
-                    "
-                  >
-                    ·
-                    {{
-                      (rows[vr.index] as { card: Card }).card.sourceTitle ||
-                      (rows[vr.index] as { card: Card }).card.sourceUrl
-                    }}</template
-                  >
-                </div>
-                <div class="line-clamp-2 text-sm text-gray-900">
-                  {{ (rows[vr.index] as { card: Card }).card.text }}
-                </div>
-              </button>
-            </div>
+            <ReviewListRow
+              :row="rows[vr.index]"
+              :selected="rows[vr.index].id === selectedId"
+              @select="selectedId = rows[vr.index].id"
+            />
           </div>
         </div>
       </aside>
@@ -286,22 +240,17 @@ function formatTime(ts: number): string {
         <div v-if="selectedCard" class="divide-y divide-gray-100">
           <!-- 原文 + 假名 + 喇叭 -->
           <div class="pb-4 text-xl leading-loose text-gray-900">
-            <template v-if="segments.length">
-              <template v-for="(seg, i) in segments" :key="i">
-                <ruby v-if="seg.reading"
-                  >{{ seg.surface }}<rt class="text-[0.5em] font-normal text-gray-500">{{
-                    seg.reading
-                  }}</rt></ruby
-                >
-                <span v-else>{{ seg.surface }}</span>
-              </template>
-            </template>
+            <FuriganaText
+              v-if="segments.length"
+              :segments="segments"
+              rt-class="text-[0.5em] font-normal text-gray-500"
+            />
             <span v-else>{{ selectedCard.text }}</span>
             <button
               v-if="canSpeak"
               class="ml-2 cursor-pointer align-middle text-lg opacity-70 hover:opacity-100"
               :title="t('popup.speak')"
-              @click="speakCard(selectedCard.text)"
+              @click="speakJa(selectedCard.text)"
             >
               🔊
             </button>
