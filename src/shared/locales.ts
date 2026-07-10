@@ -1,16 +1,80 @@
-// vue-i18n 语言包。嵌套结构（vue-i18n 用点号作路径），所有语言须保持结构一致。
+// vue-i18n 语言包。嵌套结构（vue-i18n 用点号作路径）；以 en 为基准，
+// 其余语言经 LocaleMessages 类型标注保证结构一致（缺失/多余 key 编译期报错）。
 // 语言 = 用户母语（UI 与 AI 讲解语言）；日语是学习目标，不作为母语/UI 语言。
 
-const de = {
+const en = {
+  appName: 'Japanese Reading Assistant',
+  slogan: 'Strengthen your reading comprehension',
+  tab: { review: 'Review' },
+  settings: {
+    learner: 'Learner',
+    nativeLang: 'Native language (explanations & UI)',
+    jlptLevel: 'Your current Japanese level (JLPT)',
+    autoRecord: 'Auto-save explanation cards (off: save manually at the bottom of the popup)',
+    modelTab: 'Model',
+    modelHint:
+      'Pick Base URL and Model from presets or type your own. Local (localhost) endpoints usually need no API Key.',
+    apiKeyPlaceholder: 'Leave empty for local endpoints',
+    testConn: 'Test connection',
+    testing: 'Testing…',
+    testOk: '✓ Connected',
+    testFail: 'Connection failed',
+    saved: '✓ Saved',
+    loading: 'Loading…',
+  },
+  jlpt: { entry: 'Beginner (no basics)' },
+  review: {
+    title: 'Review records',
+    total: '{n} cards',
+    count: '{n}',
+    clearAll: 'Clear all',
+    confirmClear: 'Clear all?',
+    clearCurrent: 'Clear filtered',
+    confirmClearCurrent: 'Clear the filtered cards?',
+    empty: 'No cards yet. Select Japanese text on a page and explain it to save one.',
+    selectHint: 'Select an item on the left to view details',
+    filterLevel: 'Level',
+    filterLang: 'Language',
+  },
+  sec: { translation: 'Translation', grammar: 'Grammar', vocabulary: 'Vocabulary', notes: 'Notes' },
+  popup: {
+    title: 'Japanese guide',
+    speak: 'Read aloud',
+    builtinTrans: 'Browser translation',
+    parsing: 'Parsing…',
+    analyzing: 'Analyzing…',
+    analyzeFail: 'Analysis failed: {msg}',
+    analyze: 'Explain with AI',
+    reanalyze: 'Re-analyze',
+    contextInvalid: 'Extension updated. Please reload this page and try again.',
+    saveFail: 'Save failed: {msg}',
+    save: 'Save to review',
+    saved: '✓ Saved to review',
+  },
+  common: {
+    show: 'Show',
+    hide: 'Hide',
+    confirm: 'Confirm',
+    cancel: 'Cancel',
+    delete: 'Delete',
+    retry: 'Retry',
+    all: 'All',
+    version: 'Version',
+  },
+};
+
+// 以 en 为基准的结构类型：其余语言用它标注，缺失或多余的 key 都会在编译期报错
+type LocaleMessages = typeof en;
+
+const de: LocaleMessages = {
   appName: 'Japanisch-Lesehilfe',
   slogan: 'Stärke dein Leseverständnis',
-  tab: { settings: 'Einstellungen', review: 'Wiederholung' },
+  tab: { review: 'Wiederholung' },
   settings: {
     learner: 'Lernender',
     nativeLang: 'Muttersprache (Erklärungen und Oberfläche)',
     jlptLevel: 'Dein aktuelles Japanisch-Niveau (JLPT)',
     autoRecord: 'Erklärungskarten automatisch speichern (sonst unten im Popup manuell speichern)',
-    model: 'Modell (OpenAI-kompatibler Endpunkt)',
     modelTab: 'Modell',
     modelHint:
       'Base URL und Model aus den Voreinstellungen wählen oder selbst eingeben. Lokale Endpunkte (localhost) brauchen meist keinen API-Key.',
@@ -21,7 +85,6 @@ const de = {
     testFail: 'Verbindung fehlgeschlagen',
     saved: '✓ Gespeichert',
     loading: 'Wird geladen…',
-    openReview: 'Wiederholung öffnen',
   },
   jlpt: { entry: 'Anfänger (ohne Grundlagen)' },
   review: {
@@ -34,9 +97,6 @@ const de = {
     confirmClearCurrent: 'Gefilterte Karten löschen?',
     empty:
       'Noch keine Karten. Markiere japanischen Text auf einer Seite und lass ihn erklären, um zu speichern.',
-    confirmDelete: 'Löschen bestätigen',
-    expand: 'Details anzeigen',
-    collapse: 'Einklappen',
     selectHint: 'Wähle links einen Eintrag, um Details zu sehen',
     filterLevel: 'Niveau',
     filterLang: 'Sprache',
@@ -57,6 +117,7 @@ const de = {
     analyze: 'Mit KI erklären',
     reanalyze: 'Neu analysieren',
     contextInvalid: 'Erweiterung aktualisiert. Bitte lade diese Seite neu und versuche es erneut.',
+    saveFail: 'Speichern fehlgeschlagen: {msg}',
     save: 'In Wiederholung speichern',
     saved: '✓ In Wiederholung gespeichert',
   },
@@ -72,82 +133,16 @@ const de = {
   },
 };
 
-const en = {
-  appName: 'Japanese Reading Assistant',
-  slogan: 'Strengthen your reading comprehension',
-  tab: { settings: 'Settings', review: 'Review' },
-  settings: {
-    learner: 'Learner',
-    nativeLang: 'Native language (explanations & UI)',
-    jlptLevel: 'Your current Japanese level (JLPT)',
-    autoRecord: 'Auto-save explanation cards (off: save manually at the bottom of the popup)',
-    model: 'Model (OpenAI-compatible endpoint)',
-    modelTab: 'Model',
-    modelHint:
-      'Pick Base URL and Model from presets or type your own. Local (localhost) endpoints usually need no API Key.',
-    apiKeyPlaceholder: 'Leave empty for local endpoints',
-    testConn: 'Test connection',
-    testing: 'Testing…',
-    testOk: '✓ Connected',
-    testFail: 'Connection failed',
-    saved: '✓ Saved',
-    loading: 'Loading…',
-    openReview: 'Open review records',
-  },
-  jlpt: { entry: 'Beginner (no basics)' },
-  review: {
-    title: 'Review records',
-    total: '{n} cards',
-    count: '{n}',
-    clearAll: 'Clear all',
-    confirmClear: 'Clear all?',
-    clearCurrent: 'Clear filtered',
-    confirmClearCurrent: 'Clear the filtered cards?',
-    empty: 'No cards yet. Select Japanese text on a page and explain it to save one.',
-    confirmDelete: 'Confirm delete',
-    expand: 'Show details',
-    collapse: 'Collapse',
-    selectHint: 'Select an item on the left to view details',
-    filterLevel: 'Level',
-    filterLang: 'Language',
-  },
-  sec: { translation: 'Translation', grammar: 'Grammar', vocabulary: 'Vocabulary', notes: 'Notes' },
-  popup: {
-    title: 'Japanese guide',
-    speak: 'Read aloud',
-    builtinTrans: 'Browser translation',
-    parsing: 'Parsing…',
-    analyzing: 'Analyzing…',
-    analyzeFail: 'Analysis failed: {msg}',
-    analyze: 'Explain with AI',
-    reanalyze: 'Re-analyze',
-    contextInvalid: 'Extension updated. Please reload this page and try again.',
-    save: 'Save to review',
-    saved: '✓ Saved to review',
-  },
-  common: {
-    show: 'Show',
-    hide: 'Hide',
-    confirm: 'Confirm',
-    cancel: 'Cancel',
-    delete: 'Delete',
-    retry: 'Retry',
-    all: 'All',
-    version: 'Version',
-  },
-};
-
-const es = {
+const es: LocaleMessages = {
   appName: 'Asistente de lectura de japonés',
   slogan: 'Refuerza tu comprensión lectora',
-  tab: { settings: 'Ajustes', review: 'Repaso' },
+  tab: { review: 'Repaso' },
   settings: {
     learner: 'Estudiante',
     nativeLang: 'Idioma nativo (explicaciones e interfaz)',
     jlptLevel: 'Tu nivel actual de japonés (JLPT)',
     autoRecord:
       'Guardar tarjetas automáticamente (si se desactiva, guarda manualmente al final del popup)',
-    model: 'Modelo (endpoint compatible con OpenAI)',
     modelTab: 'Modelo',
     modelHint:
       'Elige Base URL y Model de los preajustes o escríbelos. Los endpoints locales (localhost) no suelen necesitar API Key.',
@@ -158,7 +153,6 @@ const es = {
     testFail: 'Conexión fallida',
     saved: '✓ Guardado',
     loading: 'Cargando…',
-    openReview: 'Abrir el repaso',
   },
   jlpt: { entry: 'Principiante (sin base)' },
   review: {
@@ -170,9 +164,6 @@ const es = {
     clearCurrent: 'Borrar filtrados',
     confirmClearCurrent: '¿Borrar las tarjetas filtradas?',
     empty: 'Aún no hay tarjetas. Selecciona texto japonés en una página y explícalo para guardarlo.',
-    confirmDelete: 'Confirmar borrado',
-    expand: 'Ver detalles',
-    collapse: 'Ocultar',
     selectHint: 'Selecciona un elemento a la izquierda para ver los detalles',
     filterLevel: 'Nivel',
     filterLang: 'Idioma',
@@ -193,6 +184,7 @@ const es = {
     analyze: 'Explicar con IA',
     reanalyze: 'Reanalizar',
     contextInvalid: 'Extensión actualizada. Recarga esta página e inténtalo de nuevo.',
+    saveFail: 'Error al guardar: {msg}',
     save: 'Guardar en repaso',
     saved: '✓ Guardado en repaso',
   },
@@ -208,17 +200,16 @@ const es = {
   },
 };
 
-const fr = {
+const fr: LocaleMessages = {
   appName: 'Assistant de lecture du japonais',
   slogan: 'Renforcez votre compréhension écrite',
-  tab: { settings: 'Paramètres', review: 'Révision' },
+  tab: { review: 'Révision' },
   settings: {
     learner: 'Apprenant',
     nativeLang: 'Langue maternelle (explications et interface)',
     jlptLevel: 'Votre niveau actuel de japonais (JLPT)',
     autoRecord:
       'Enregistrer les cartes automatiquement (sinon, enregistrez manuellement en bas de la fenêtre)',
-    model: 'Modèle (point de terminaison compatible OpenAI)',
     modelTab: 'Modèle',
     modelHint:
       'Choisissez Base URL et Model parmi les préréglages ou saisissez-les. Les points de terminaison locaux (localhost) ne nécessitent généralement pas de clé API.',
@@ -229,7 +220,6 @@ const fr = {
     testFail: 'Échec de la connexion',
     saved: '✓ Enregistré',
     loading: 'Chargement…',
-    openReview: 'Ouvrir les révisions',
   },
   jlpt: { entry: 'Débutant (sans base)' },
   review: {
@@ -242,9 +232,6 @@ const fr = {
     confirmClearCurrent: 'Effacer les cartes filtrées ?',
     empty:
       'Aucune carte pour l’instant. Sélectionnez du texte japonais sur une page et expliquez-le pour l’enregistrer.',
-    confirmDelete: 'Confirmer la suppression',
-    expand: 'Voir les détails',
-    collapse: 'Réduire',
     selectHint: 'Sélectionnez un élément à gauche pour voir les détails',
     filterLevel: 'Niveau',
     filterLang: 'Langue',
@@ -265,6 +252,7 @@ const fr = {
     analyze: 'Expliquer avec l’IA',
     reanalyze: 'Réanalyser',
     contextInvalid: 'Extension mise à jour. Rechargez cette page et réessayez.',
+    saveFail: 'Échec de l’enregistrement : {msg}',
     save: 'Enregistrer dans les révisions',
     saved: '✓ Enregistré dans les révisions',
   },
@@ -280,16 +268,15 @@ const fr = {
   },
 };
 
-const ko = {
+const ko: LocaleMessages = {
   appName: '일본어 읽기 도우미',
   slogan: '읽기 이해력을 강화하세요',
-  tab: { settings: '설정', review: '복습 기록' },
+  tab: { review: '복습 기록' },
   settings: {
     learner: '학습자',
     nativeLang: '모국어 (해설·UI 언어)',
     jlptLevel: '현재 일본어 레벨 (JLPT)',
     autoRecord: '해설 카드 자동 저장 (끄면 팝업 하단에서 수동 저장)',
-    model: '모델 (OpenAI 호환 엔드포인트)',
     modelTab: '모델',
     modelHint:
       'Base URL과 Model은 프리셋에서 선택하거나 직접 입력할 수 있습니다. 로컬(localhost) 엔드포인트는 보통 API Key가 필요 없습니다.',
@@ -300,7 +287,6 @@ const ko = {
     testFail: '연결 실패',
     saved: '✓ 저장됨',
     loading: '불러오는 중…',
-    openReview: '복습 기록 열기',
   },
   jlpt: { entry: '입문 (기초 없음)' },
   review: {
@@ -312,9 +298,6 @@ const ko = {
     clearCurrent: '필터 결과 삭제',
     confirmClearCurrent: '필터된 카드를 삭제할까요?',
     empty: '아직 카드가 없습니다. 웹페이지에서 일본어를 선택해 해설하면 저장됩니다.',
-    confirmDelete: '삭제 확인',
-    expand: '해설 펼치기',
-    collapse: '접기',
     selectHint: '왼쪽에서 항목을 선택해 상세 내용을 보세요',
     filterLevel: '레벨',
     filterLang: '해설 언어',
@@ -330,6 +313,7 @@ const ko = {
     analyze: 'AI 해설',
     reanalyze: '다시 분석',
     contextInvalid: '확장이 업데이트되었습니다. 이 페이지를 새로고침한 뒤 다시 시도하세요.',
+    saveFail: '저장 실패: {msg}',
     save: '복습에 저장',
     saved: '✓ 복습에 저장됨',
   },
@@ -345,17 +329,16 @@ const ko = {
   },
 };
 
-const pt = {
+const pt: LocaleMessages = {
   appName: 'Assistente de leitura de japonês',
   slogan: 'Fortaleça sua compreensão de leitura',
-  tab: { settings: 'Configurações', review: 'Revisão' },
+  tab: { review: 'Revisão' },
   settings: {
     learner: 'Aluno',
     nativeLang: 'Idioma nativo (explicações e interface)',
     jlptLevel: 'Seu nível atual de japonês (JLPT)',
     autoRecord:
       'Salvar cartões automaticamente (se desativado, salve manualmente no rodapé do popup)',
-    model: 'Modelo (endpoint compatível com OpenAI)',
     modelTab: 'Modelo',
     modelHint:
       'Escolha Base URL e Model nas predefinições ou digite-os. Endpoints locais (localhost) geralmente não precisam de API Key.',
@@ -366,7 +349,6 @@ const pt = {
     testFail: 'Falha na conexão',
     saved: '✓ Salvo',
     loading: 'Carregando…',
-    openReview: 'Abrir a revisão',
   },
   jlpt: { entry: 'Iniciante (sem base)' },
   review: {
@@ -379,9 +361,6 @@ const pt = {
     confirmClearCurrent: 'Limpar os cartões filtrados?',
     empty:
       'Ainda não há cartões. Selecione um texto em japonês numa página e explique-o para salvar.',
-    confirmDelete: 'Confirmar exclusão',
-    expand: 'Ver detalhes',
-    collapse: 'Recolher',
     selectHint: 'Selecione um item à esquerda para ver os detalhes',
     filterLevel: 'Nível',
     filterLang: 'Idioma',
@@ -402,6 +381,7 @@ const pt = {
     analyze: 'Explicar com IA',
     reanalyze: 'Analisar de novo',
     contextInvalid: 'Extensão atualizada. Recarregue esta página e tente novamente.',
+    saveFail: 'Falha ao salvar: {msg}',
     save: 'Salvar na revisão',
     saved: '✓ Salvo na revisão',
   },
@@ -417,17 +397,16 @@ const pt = {
   },
 };
 
-const ru = {
+const ru: LocaleMessages = {
   appName: 'Помощник по чтению на японском',
   slogan: 'Улучшайте понимание прочитанного',
-  tab: { settings: 'Настройки', review: 'Повторение' },
+  tab: { review: 'Повторение' },
   settings: {
     learner: 'Ученик',
     nativeLang: 'Родной язык (объяснения и интерфейс)',
     jlptLevel: 'Ваш текущий уровень японского (JLPT)',
     autoRecord:
       'Автоматически сохранять карточки (если выключено — сохраняйте вручную внизу окна)',
-    model: 'Модель (эндпоинт, совместимый с OpenAI)',
     modelTab: 'Модель',
     modelHint:
       'Выберите Base URL и Model из пресетов или введите свои. Локальным эндпоинтам (localhost) обычно не нужен API-ключ.',
@@ -438,7 +417,6 @@ const ru = {
     testFail: 'Ошибка подключения',
     saved: '✓ Сохранено',
     loading: 'Загрузка…',
-    openReview: 'Открыть повторение',
   },
   jlpt: { entry: 'Начинающий (с нуля)' },
   review: {
@@ -451,9 +429,6 @@ const ru = {
     confirmClearCurrent: 'Очистить отфильтрованные карточки?',
     empty:
       'Пока нет карточек. Выделите японский текст на странице и разберите его, чтобы сохранить.',
-    confirmDelete: 'Подтвердить удаление',
-    expand: 'Подробнее',
-    collapse: 'Свернуть',
     selectHint: 'Выберите элемент слева, чтобы увидеть детали',
     filterLevel: 'Уровень',
     filterLang: 'Язык',
@@ -474,6 +449,7 @@ const ru = {
     analyze: 'Разобрать с ИИ',
     reanalyze: 'Разобрать заново',
     contextInvalid: 'Расширение обновлено. Обновите эту страницу и повторите попытку.',
+    saveFail: 'Не удалось сохранить: {msg}',
     save: 'Сохранить в повторение',
     saved: '✓ Сохранено в повторение',
   },
@@ -489,16 +465,15 @@ const ru = {
   },
 };
 
-const zhCN = {
+const zhCN: LocaleMessages = {
   appName: '日语阅读助手',
   slogan: '提升你的阅读理解能力',
-  tab: { settings: '设置', review: '复习' },
+  tab: { review: '复习' },
   settings: {
     learner: '学习者',
     nativeLang: '母语（讲解语言 + 界面语言）',
     jlptLevel: '你当前的日语等级（JLPT）',
     autoRecord: '自动记录讲解卡片（关闭后需在弹窗底部手动保存）',
-    model: '模型（OpenAI 兼容端点）',
     modelTab: '模型',
     modelHint:
       'Base URL 与 Model 可从预设下拉选择，也可手动输入任意值。本地端点（localhost）通常无需 API Key。',
@@ -509,7 +484,6 @@ const zhCN = {
     testFail: '连接失败',
     saved: '✓ 已保存',
     loading: '加载中…',
-    openReview: '打开复习记录',
   },
   jlpt: { entry: '入门（零基础）' },
   review: {
@@ -521,9 +495,6 @@ const zhCN = {
     clearCurrent: '清空当前',
     confirmClearCurrent: '确认清空当前筛选的记录？',
     empty: '还没有复习卡片。在网页中选中日语并讲解后即可记录。',
-    confirmDelete: '确认删除',
-    expand: '展开讲解',
-    collapse: '收起',
     selectHint: '从左侧选择一条查看详情',
     filterLevel: '等级',
     filterLang: '讲解语言',
@@ -539,6 +510,7 @@ const zhCN = {
     analyze: 'AI 讲解',
     reanalyze: '重新分析',
     contextInvalid: '扩展已更新，请刷新此页面后重试',
+    saveFail: '保存失败：{msg}',
     save: '保存到复习记录',
     saved: '✓ 已记录到复习',
   },
@@ -554,16 +526,15 @@ const zhCN = {
   },
 };
 
-const zhTW = {
+const zhTW: LocaleMessages = {
   appName: '日語閱讀助手',
   slogan: '提升你的閱讀理解能力',
-  tab: { settings: '設定', review: '複習' },
+  tab: { review: '複習' },
   settings: {
     learner: '學習者',
     nativeLang: '母語（講解語言 + 介面語言）',
     jlptLevel: '你目前的日語等級（JLPT）',
     autoRecord: '自動記錄講解卡片（關閉後需在彈窗底部手動儲存）',
-    model: '模型（OpenAI 相容端點）',
     modelTab: '模型',
     modelHint:
       'Base URL 與 Model 可從預設下拉選擇，也可手動輸入任意值。本機端點（localhost）通常無需 API Key。',
@@ -574,7 +545,6 @@ const zhTW = {
     testFail: '連線失敗',
     saved: '✓ 已儲存',
     loading: '載入中…',
-    openReview: '開啟複習記錄',
   },
   jlpt: { entry: '入門（零基礎）' },
   review: {
@@ -586,9 +556,6 @@ const zhTW = {
     clearCurrent: '清空目前',
     confirmClearCurrent: '確認清空目前篩選的記錄？',
     empty: '還沒有複習卡片。在網頁中選取日語並講解後即可記錄。',
-    confirmDelete: '確認刪除',
-    expand: '展開講解',
-    collapse: '收合',
     selectHint: '從左側選擇一項查看詳情',
     filterLevel: '等級',
     filterLang: '講解語言',
@@ -604,6 +571,7 @@ const zhTW = {
     analyze: 'AI 講解',
     reanalyze: '重新分析',
     contextInvalid: '擴充功能已更新，請重新整理此頁面後再試',
+    saveFail: '儲存失敗：{msg}',
     save: '儲存至複習記錄',
     saved: '✓ 已記錄至複習',
   },
