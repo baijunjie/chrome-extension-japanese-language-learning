@@ -61,5 +61,7 @@ export interface Card {
   text: string;
   jlptLevel: JlptLevel;
   nativeLang: NativeLang;
+  /** 内容键（shared/text 的 contentKey），建索引用于"该内容是否已记录"查询 */
+  contentKey: string;
   analysis: Analysis;
 }

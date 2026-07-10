@@ -8,7 +8,7 @@ import {
   putCachedAnalysis,
 } from '@shared/storage';
 import { loadSettings } from '@shared/settings';
-import { normalizeContent } from '@shared/text';
+import { contentKey } from '@shared/text';
 import type {
   AnalyzeMessage,
   AnalyzeReply,
@@ -18,13 +18,7 @@ import type {
   SaveCardMessage,
   SaveReply,
 } from '@shared/messaging';
-import type { Analysis, AppSettings, Card, JlptLevel, NativeLang } from '@shared/types';
-
-// 缓存键：归一化内容 + 等级 + 母语（分析结果随这三者变化）。
-// 归一化让仅相差首尾标点/空白的选区命中同一缓存。
-function contentKey(text: string, level: JlptLevel, lang: NativeLang): string {
-  return `${normalizeContent(text)}␟${level}␟${lang}`;
-}
+import type { Analysis, AppSettings, Card } from '@shared/types';
 
 function makeCard(
   msg: { text: string; sourceUrl: string; sourceTitle: string },
@@ -39,8 +33,23 @@ function makeCard(
     text: msg.text,
     jlptLevel: settings.jlptLevel,
     nativeLang: settings.nativeLang,
+    contentKey: contentKey(msg.text, settings.jlptLevel, settings.nativeLang),
     analysis,
   };
+}
+
+/** 该内容已有卡片则返回其 id；没有且开启自动记录则补存一张（否则返回 null） */
+async function ensureCardSaved(
+  msg: { text: string; sourceUrl: string; sourceTitle: string },
+  analysis: Analysis,
+  settings: AppSettings,
+): Promise<string | null> {
+  const existing = await findCardIdByContent(msg.text, settings.jlptLevel, settings.nativeLang);
+  if (existing) return existing;
+  if (!settings.autoRecord) return null;
+  const card = makeCard(msg, analysis, settings);
+  await addCard(card);
+  return card.id;
 }
 
 async function handleAnalyze(msg: AnalyzeMessage): Promise<AnalyzeReply> {
@@ -54,18 +63,12 @@ async function handleAnalyze(msg: AnalyzeMessage): Promise<AnalyzeReply> {
     await putCachedAnalysis(key, analysis);
   }
 
-  let savedCardId = await findCardIdByContent(msg.text, settings.jlptLevel, settings.nativeLang);
-  // 重新分析：先清除该内容的旧复习记录，再按下面的自动记录设置重新落一张新卡
-  if (msg.forceRefresh && savedCardId) {
-    await deleteCard(savedCardId);
-    savedCardId = null;
+  // 重新分析：先清除该内容的旧复习记录，随后按自动记录设置重新落一张新卡
+  if (msg.forceRefresh) {
+    const oldId = await findCardIdByContent(msg.text, settings.jlptLevel, settings.nativeLang);
+    if (oldId) await deleteCard(oldId);
   }
-  if (savedCardId === null && settings.autoRecord) {
-    const card = makeCard(msg, analysis, settings);
-    await addCard(card);
-    savedCardId = card.id;
-  }
-
+  const savedCardId = await ensureCardSaved(msg, analysis, settings);
   return { ok: true, analysis, savedCardId };
 }
 
@@ -73,13 +76,10 @@ async function handlePeekCache(msg: PeekCacheMessage): Promise<PeekReply> {
   const settings = await loadSettings();
   const key = contentKey(msg.text, settings.jlptLevel, settings.nativeLang);
   const analysis = await getCachedAnalysis(key);
-  let savedCardId = await findCardIdByContent(msg.text, settings.jlptLevel, settings.nativeLang);
-  // 命中缓存且开启自动记录但尚无卡片时，补存一张（使自动记录对缓存命中同样生效）
-  if (analysis && !savedCardId && settings.autoRecord) {
-    const card = makeCard(msg, analysis, settings);
-    await addCard(card);
-    savedCardId = card.id;
-  }
+  // 命中缓存时使自动记录同样生效（尚无卡片则补存一张）
+  const savedCardId = analysis
+    ? await ensureCardSaved(msg, analysis, settings)
+    : await findCardIdByContent(msg.text, settings.jlptLevel, settings.nativeLang);
   return { ok: true, analysis, savedCardId };
 }
 
