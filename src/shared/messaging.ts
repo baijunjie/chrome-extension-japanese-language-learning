@@ -29,6 +29,14 @@ export interface SaveCardMessage {
 
 export type RuntimeMessage = AnalyzeMessage | PeekCacheMessage | SaveCardMessage;
 
+// 方向与上面相反：service worker → content script。
+// 右键菜单点击后，由 SW 通知选区所在 frame 直接打开讲解 popup。
+export interface ContextMenuTriggerMessage {
+  type: 'contextMenuTrigger';
+  /** 菜单触发时的选中文字，仅作实时选区取不到时的兜底 */
+  selectionText: string;
+}
+
 interface ErrReply {
   ok: false;
   error: string;

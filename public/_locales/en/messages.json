@@ -2,5 +2,6 @@
   "appName": { "message": "Japanese Reading Assistant" },
   "appDesc": {
     "message": "Read Japanese on the web with instant furigana and on-demand, JLPT-aware AI explanations, saved as review cards."
-  }
+  },
+  "ctxMenuExplain": { "message": "Explain \"%s\" with AI" }
 }

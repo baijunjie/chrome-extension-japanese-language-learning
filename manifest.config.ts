@@ -37,8 +37,9 @@ export default defineManifest({
       run_at: 'document_idle',
     },
   ],
-  // storage: 设置/卡片持久化；host_permissions: SW 跨域调用用户配置的 AI 端点(含 localhost)
-  permissions: ['storage'],
+  // storage: 设置/卡片持久化；contextMenus: 选区右键菜单入口；
+  // host_permissions: SW 跨域调用用户配置的 AI 端点(含 localhost)
+  permissions: ['storage', 'contextMenus'],
   host_permissions: ['<all_urls>'],
   // content script 需从扩展内加载 kuromoji 词典
   web_accessible_resources: [

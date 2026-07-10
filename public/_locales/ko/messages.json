@@ -2,5 +2,6 @@
   "appName": { "message": "일본어 읽기 도우미" },
   "appDesc": {
     "message": "웹에서 일본어 읽기: 즉시 후리가나와 JLPT 수준별 AI 해설(요청 시)을 제공하고 복습 카드로 저장합니다."
-  }
+  },
+  "ctxMenuExplain": { "message": "AI로 “%s” 해설하기" }
 }

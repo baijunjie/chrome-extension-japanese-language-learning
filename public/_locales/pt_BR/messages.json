@@ -2,5 +2,6 @@
   "appName": { "message": "Assistente de leitura de japonês" },
   "appDesc": {
     "message": "Leia japonês na web com furigana instantâneo e explicações de IA conforme seu nível JLPT, salvas como cartões de revisão."
-  }
+  },
+  "ctxMenuExplain": { "message": "Explicar “%s” com IA" }
 }

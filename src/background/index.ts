@@ -1,4 +1,5 @@
-// Service Worker：接收 content script 的消息，调用 AI 分析、缓存结果并按设置存卡。
+// Service Worker：接收 content script 的消息，调用 AI 分析、缓存结果并按设置存卡；
+// 同时注册选区右键菜单，点击后通知对应 frame 的 content script 打开讲解 popup。
 import { analyze } from '@shared/ai';
 import {
   addCard,
@@ -12,6 +13,7 @@ import { contentKey } from '@shared/text';
 import type {
   AnalyzeMessage,
   AnalyzeReply,
+  ContextMenuTriggerMessage,
   PeekCacheMessage,
   PeekReply,
   RuntimeMessage,
@@ -19,6 +21,32 @@ import type {
   SaveReply,
 } from '@shared/messaging';
 import type { Analysis, AppSettings, Card } from '@shared/types';
+
+const CONTEXT_MENU_ID = 'jpl-explain-selection';
+
+chrome.runtime.onInstalled.addListener(() => {
+  // 先 removeAll 再 create：reload/更新时保证幂等，避免重复 id 报错
+  chrome.contextMenus.removeAll(() => {
+    chrome.contextMenus.create({
+      id: CONTEXT_MENU_ID,
+      // 文案含 %s，Chrome 自动填入截断后的选中文字
+      title: chrome.i18n.getMessage('ctxMenuExplain'),
+      contexts: ['selection'],
+      // 仅在可注入 content script 的页面显示，排除 chrome:// 等
+      documentUrlPatterns: ['http://*/*', 'https://*/*', 'file://*/*'],
+    });
+  });
+});
+
+chrome.contextMenus.onClicked.addListener((info, tab) => {
+  if (info.menuItemId !== CONTEXT_MENU_ID || !tab?.id) return;
+  const msg: ContextMenuTriggerMessage = {
+    type: 'contextMenuTrigger',
+    selectionText: info.selectionText ?? '',
+  };
+  // 发给选区所在 frame；旧标签页可能未注入 content script，失败静默
+  chrome.tabs.sendMessage(tab.id, msg, { frameId: info.frameId ?? 0 }).catch(() => {});
+});
 
 function makeCard(
   msg: { text: string; sourceUrl: string; sourceTitle: string },

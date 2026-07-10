@@ -2,5 +2,6 @@
   "appName": { "message": "日语阅读助手" },
   "appDesc": {
     "message": "在网页上阅读日语：即时假名标注 + 按需的、按 JLPT 分级的 AI 讲解，并整理成复习卡片。"
-  }
+  },
+  "ctxMenuExplain": { "message": "AI 讲解“%s”" }
 }

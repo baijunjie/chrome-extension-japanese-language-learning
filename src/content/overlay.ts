@@ -40,6 +40,15 @@ export function showIcon(info: SelectionInfo): void {
   ui.mode = 'icon';
 }
 
+/** 直接以 popup 态打开讲解（右键菜单触发，跳过图标态） */
+export function showPopup(info: SelectionInfo): void {
+  ensureMounted();
+  ui.text = info.text;
+  ui.rect = info.rect;
+  ui.analysis = { status: 'idle' };
+  ui.mode = 'popup';
+}
+
 /** 选区取消：仅图标态时收起（popup 由点击外部 / Esc 关闭） */
 export function onSelectionCleared(): void {
   if (ui.mode === 'icon') resetUi();
