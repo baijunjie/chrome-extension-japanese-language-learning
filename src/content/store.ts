@@ -12,6 +12,12 @@ export interface AnchorRect {
   bottom: number;
 }
 
+/** 划词命中日语后的选区信息（入口传给懒加载的弹层模块） */
+export interface SelectionInfo {
+  text: string;
+  rect: AnchorRect;
+}
+
 export type AnalysisState =
   | { status: 'idle' }
   | { status: 'loading' }

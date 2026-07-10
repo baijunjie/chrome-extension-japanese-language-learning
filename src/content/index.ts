@@ -1,44 +1,24 @@
-// Content Script 入口：划词检测 → 冒图标 → 点击后在 Shadow DOM 内挂载 Vue popup。
-import { createApp, type App as VueApp } from 'vue';
-import App from './App.vue';
-import { ui, resetUi } from './store';
-import { i18n } from '@shared/i18n';
-import popupCss from './popup.css?inline';
+// Content Script 入口：只做划词检测，保持零运行时依赖（每个页面都会注入）。
+// 首次命中日语选区才动态加载弹层模块（Vue / i18n / 分词都在那个分包里）。
+import type { SelectionInfo } from './store';
 
 // 含日语（平假名/片假名/汉字/「々」）即视为可讲解
 const JP_RE = /[぀-ゟ゠-ヿ々一-龯㐀-䶿]/;
 
-let host: HTMLElement | null = null;
-let appInstance: VueApp | null = null;
+type Overlay = typeof import('./overlay');
 
-/** 懒挂载：首次需要时创建 shadow host 并挂载 Vue */
-function ensureMounted(): void {
-  if (host) return;
-  host = document.createElement('div');
-  host.id = 'jpl-root';
-  const shadow = host.attachShadow({ mode: 'open' });
+let overlay: Overlay | null = null;
+let overlayPromise: Promise<Overlay> | null = null;
 
-  const style = document.createElement('style');
-  style.textContent = popupCss;
-  shadow.appendChild(style);
-
-  const mountPoint = document.createElement('div');
-  shadow.appendChild(mountPoint);
-  document.body.appendChild(host);
-
-  appInstance = createApp(App);
-  appInstance.use(i18n);
-  appInstance.mount(mountPoint);
-}
-
-/** 事件是否发生在扩展自身的 shadow 内（避免误关闭） */
-function isInsideHost(e: Event): boolean {
-  return !!host && e.composedPath().includes(host);
-}
-
-interface SelectionInfo {
-  text: string;
-  rect: { top: number; left: number; right: number; bottom: number };
+/** 懒加载弹层模块；加载失败不缓存，允许下次划词重试 */
+function loadOverlay(): Promise<Overlay> {
+  if (!overlayPromise) {
+    overlayPromise = import('./overlay').then((m) => (overlay = m));
+    overlayPromise.catch(() => {
+      overlayPromise = null;
+    });
+  }
+  return overlayPromise;
 }
 
 function getSelectionInfo(): SelectionInfo | null {
@@ -58,28 +38,26 @@ function getSelectionInfo(): SelectionInfo | null {
 }
 
 document.addEventListener('mouseup', (e) => {
-  if (isInsideHost(e)) return;
+  if (overlay?.isInsideHost(e)) return;
   // 延后到选区稳定后再读取
   setTimeout(() => {
     const info = getSelectionInfo();
     if (!info) {
-      if (ui.mode === 'icon') resetUi();
+      overlay?.onSelectionCleared();
       return;
     }
-    ensureMounted();
-    ui.text = info.text;
-    ui.rect = info.rect;
-    ui.analysis = { status: 'idle' };
-    ui.mode = 'icon';
+    loadOverlay()
+      .then((m) => m.showIcon(info))
+      .catch(() => {});
   }, 0);
 });
 
 // 点击 popup/图标之外关闭
 document.addEventListener('mousedown', (e) => {
-  if (isInsideHost(e)) return;
-  if (ui.mode !== 'hidden') resetUi();
+  if (!overlay || overlay.isInsideHost(e)) return;
+  overlay.hideAll();
 });
 
 document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape' && ui.mode !== 'hidden') resetUi();
+  if (e.key === 'Escape') overlay?.hideAll();
 });
