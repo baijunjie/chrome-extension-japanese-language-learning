@@ -21,7 +21,21 @@ const nativeLang = ref<NativeLang>('en');
 const freeTranslation = ref('');
 const freeTranslating = ref(false);
 
+// 弹层/图标定位常量（文档坐标，单位 px；POPUP_MAX_VH 为视口高度占比）
 const POPUP_WIDTH = 380;
+// 弹层、图标与选区之间的间隙
+const POPUP_GAP = 8;
+// 弹层与视口边缘保留的边距
+const VIEWPORT_MARGIN = 12;
+// 弹层高度上限（视口高度占比），与该侧可用空间取小
+const POPUP_MAX_VH = 0.7;
+// 弹层高度下限兜底：选区几乎占满视口时避免弹层小到不可用
+const POPUP_MIN_HEIGHT = 160;
+// 下方可用空间低于此阈值且上方更充裕时，翻转到选区上方展示
+const POPUP_FLIP_THRESHOLD = 240;
+// 「あ」图标尺寸，及其相对选区、相对视口边缘的边距
+const ICON_SIZE = 26;
+const ICON_MARGIN = 4;
 
 const segments = ref<FuriganaSegment[]>([]);
 const furiganaLoading = ref(false);
@@ -38,19 +52,44 @@ onSettingsChanged((s) => {
   setLocale(s.nativeLang);
 });
 
-const iconStyle = computed(() => ({
-  top: `${ui.rect.bottom + 4}px`,
-  left: `${ui.rect.right + 4}px`,
-}));
+const iconStyle = computed(() => {
+  // 默认贴选区右下角，但 clamp 进视口，避免选区贴近右/下边缘时图标被裁掉一半
+  const minLeft = window.scrollX + ICON_MARGIN;
+  const maxLeft = window.scrollX + window.innerWidth - ICON_SIZE - ICON_MARGIN;
+  const minTop = window.scrollY + ICON_MARGIN;
+  const maxTop = window.scrollY + window.innerHeight - ICON_SIZE - ICON_MARGIN;
+  const left = Math.max(minLeft, Math.min(ui.rect.right + ICON_MARGIN, maxLeft));
+  const top = Math.max(minTop, Math.min(ui.rect.bottom + ICON_MARGIN, maxTop));
+  return {
+    top: `${top}px`,
+    left: `${left}px`,
+  };
+});
 
 const popupStyle = computed(() => {
-  const minLeft = window.scrollX + 12;
-  const maxLeft = window.scrollX + window.innerWidth - POPUP_WIDTH - 12;
+  // 水平：贴选区左缘，clamp 进视口
+  const minLeft = window.scrollX + VIEWPORT_MARGIN;
+  const maxLeft = window.scrollX + window.innerWidth - POPUP_WIDTH - VIEWPORT_MARGIN;
   const left = Math.max(minLeft, Math.min(ui.rect.left, maxLeft));
+
+  // 垂直：默认放选区下方；分别算出上下两侧到视口边缘、扣除间隙与边距后的可用高度
+  const viewportBottom = window.scrollY + window.innerHeight;
+  const spaceBelow = viewportBottom - ui.rect.bottom - POPUP_GAP - VIEWPORT_MARGIN;
+  const spaceAbove = ui.rect.top - window.scrollY - POPUP_GAP - VIEWPORT_MARGIN;
+  // 翻转判定：下方放不下一个合理高度的弹层，且上方空间更充裕时改放选区上方
+  const flip = spaceBelow < POPUP_FLIP_THRESHOLD && spaceAbove > spaceBelow;
+
+  // max-height 取所选一侧可用空间与 70vh 上限的较小值，再用下限兜底
+  const available = flip ? spaceAbove : spaceBelow;
+  const maxHeight = Math.max(POPUP_MIN_HEIGHT, Math.min(available, window.innerHeight * POPUP_MAX_VH));
+
   return {
-    top: `${ui.rect.bottom + 8}px`,
     left: `${left}px`,
     width: `${POPUP_WIDTH}px`,
+    maxHeight: `${maxHeight}px`,
+    // 上方翻转：锚在选区顶再上移自身高度，内容动态变高时自然向上生长（无需测量实际高度）
+    top: flip ? `${ui.rect.top - POPUP_GAP}px` : `${ui.rect.bottom + POPUP_GAP}px`,
+    transform: flip ? 'translateY(-100%)' : 'none',
   };
 });
 

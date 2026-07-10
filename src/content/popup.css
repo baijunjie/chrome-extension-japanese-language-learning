@@ -34,7 +34,7 @@
 .jpl-popup {
   position: absolute;
   z-index: 2147483647;
-  max-height: 70vh;
+  /* max-height 按视口可用空间动态设为内联样式；超出部分在此内部滚动 */
   overflow-y: auto;
   background: #fff;
   color: #1f2937;
