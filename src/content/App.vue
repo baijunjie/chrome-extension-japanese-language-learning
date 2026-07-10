@@ -9,6 +9,7 @@ import { useI18n } from 'vue-i18n';
 import { setLocale } from '@shared/i18n';
 import { speakJa, stopSpeaking, ttsSupported } from '@shared/tts';
 import { builtinTranslatorSupported, translateJaTo } from '@shared/translator';
+import FuriganaText from '@shared/FuriganaText.vue';
 
 const { t } = useI18n({ useScope: 'global' });
 
@@ -66,6 +67,12 @@ function extensionAlive(): boolean {
   return typeof chrome !== 'undefined' && !!chrome.runtime && !!chrome.runtime.id;
 }
 
+// 异步结果落地前校验弹层上下文未变：快速关闭/换选区时丢弃过期回包，
+// 避免旧文本的速译/分析结果错误地显示在新文本下。
+function stillCurrent(text: string): boolean {
+  return ui.mode === 'popup' && ui.text === text;
+}
+
 function openPopup(): void {
   ui.mode = 'popup';
 }
@@ -82,12 +89,14 @@ function close(): void {
 // 免费速译：AI 前的占位（浏览器内置端上翻译）；不可用则不显示（降级）
 async function runFreeTranslate(text: string): Promise<void> {
   freeTranslation.value = '';
+  freeTranslating.value = false;
   if (!builtinTranslatorSupported()) return;
   freeTranslating.value = true;
   try {
-    freeTranslation.value = (await translateJaTo(text, nativeLang.value)) ?? '';
+    const result = (await translateJaTo(text, nativeLang.value)) ?? '';
+    if (stillCurrent(text)) freeTranslation.value = result;
   } finally {
-    freeTranslating.value = false;
+    if (stillCurrent(text)) freeTranslating.value = false;
   }
 }
 
@@ -98,11 +107,11 @@ async function runFurigana(text: string): Promise<void> {
   try {
     if (!extensionAlive()) throw new Error(t('popup.contextInvalid'));
     const tokenizer = await initTokenizer(chrome.runtime.getURL('assets/dict'));
-    segments.value = toFuriganaSegments(tokenizer, text);
+    if (stillCurrent(text)) segments.value = toFuriganaSegments(tokenizer, text);
   } catch (e) {
-    furiganaError.value = (e as Error).message;
+    if (stillCurrent(text)) furiganaError.value = (e as Error).message;
   } finally {
-    furiganaLoading.value = false;
+    if (stillCurrent(text)) furiganaLoading.value = false;
   }
 }
 
@@ -115,6 +124,7 @@ function applyAiFurigana(a: Analysis): void {
 
 async function runAnalyze(text: string, forceRefresh = false): Promise<void> {
   ui.analysis = { status: 'loading' };
+  saveError.value = '';
   try {
     if (!extensionAlive()) throw new Error(t('popup.contextInvalid'));
     const reply = await requestAnalyze({
@@ -123,6 +133,7 @@ async function runAnalyze(text: string, forceRefresh = false): Promise<void> {
       sourceTitle: document.title,
       forceRefresh,
     });
+    if (!stillCurrent(text)) return;
     if (reply.ok) {
       ui.analysis = { status: 'done', analysis: reply.analysis, saved: reply.savedCardId !== null };
       applyAiFurigana(reply.analysis);
@@ -130,7 +141,7 @@ async function runAnalyze(text: string, forceRefresh = false): Promise<void> {
       ui.analysis = { status: 'error', message: reply.error };
     }
   } catch (e) {
-    ui.analysis = { status: 'error', message: (e as Error).message };
+    if (stillCurrent(text)) ui.analysis = { status: 'error', message: (e as Error).message };
   }
 }
 
@@ -143,7 +154,7 @@ async function peekCache(text: string): Promise<void> {
       sourceUrl: location.href,
       sourceTitle: document.title,
     });
-    if (reply.ok && reply.analysis) {
+    if (reply.ok && reply.analysis && stillCurrent(text)) {
       ui.analysis = { status: 'done', analysis: reply.analysis, saved: reply.savedCardId !== null };
       applyAiFurigana(reply.analysis);
     }
@@ -152,15 +163,29 @@ async function peekCache(text: string): Promise<void> {
   }
 }
 
+const saveError = ref('');
+
 async function save(): Promise<void> {
   if (ui.analysis.status !== 'done') return;
-  const reply = await requestSaveCard({
-    text: ui.text,
-    sourceUrl: location.href,
-    sourceTitle: document.title,
-    analysis: ui.analysis.analysis,
-  });
-  if (reply.ok) ui.analysis = { ...ui.analysis, saved: true };
+  const text = ui.text;
+  saveError.value = '';
+  try {
+    if (!extensionAlive()) throw new Error(t('popup.contextInvalid'));
+    const reply = await requestSaveCard({
+      text,
+      sourceUrl: location.href,
+      sourceTitle: document.title,
+      analysis: ui.analysis.analysis,
+    });
+    if (!stillCurrent(text)) return;
+    if (reply.ok) {
+      if (ui.analysis.status === 'done') ui.analysis = { ...ui.analysis, saved: true };
+    } else {
+      saveError.value = reply.error;
+    }
+  } catch (e) {
+    if (stillCurrent(text)) saveError.value = (e as Error).message;
+  }
 }
 
 // popup 打开：只做本地假名标注；AI 讲解改为用户点按钮主动触发
@@ -169,6 +194,7 @@ watch(
   async (text) => {
     if (!text) return;
     stopSpeaking(); // 换句时停掉上一段朗读
+    saveError.value = '';
     void runFreeTranslate(text); // 免费速译（并行，不阻塞假名）
     // 先本地假名，再查缓存；顺序保证缓存命中的 AI 假名不被 kuromoji 结果覆盖
     await runFurigana(text);
@@ -199,12 +225,7 @@ watch(
       <div class="jpl-original">
         <span v-if="furiganaLoading" class="jpl-muted">{{ t('popup.parsing') }}</span>
         <span v-else-if="furiganaError">{{ ui.text }}</span>
-        <template v-else>
-          <template v-for="(seg, i) in segments" :key="i">
-            <ruby v-if="seg.reading">{{ seg.surface }}<rt>{{ seg.reading }}</rt></ruby>
-            <span v-else>{{ seg.surface }}</span>
-          </template>
-        </template>
+        <FuriganaText v-else :segments="segments" />
         <button
           v-if="canSpeak && !furiganaLoading"
           class="jpl-speak"
@@ -272,6 +293,10 @@ watch(
         <div v-if="analysis.notes" class="jpl-section">
           <div class="jpl-label">{{ t('sec.notes') }}</div>
           <div class="jpl-text">{{ analysis.notes }}</div>
+        </div>
+
+        <div v-if="saveError" class="jpl-error">
+          {{ t('popup.saveFail', { msg: saveError }) }}
         </div>
 
         <div class="jpl-foot">

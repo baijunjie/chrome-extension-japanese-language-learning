@@ -25,6 +25,10 @@ export function initTokenizer(dicPath: string): Promise<Tokenizer<IpadicFeatures
         else resolve(tokenizer);
       });
     });
+    // 构建失败不缓存 rejected promise，下次调用可重试（如词典加载遇网络抖动）
+    tokenizerPromise.catch(() => {
+      tokenizerPromise = null;
+    });
   }
   return tokenizerPromise;
 }
