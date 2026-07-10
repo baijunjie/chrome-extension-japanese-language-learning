@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, reactive, ref, watch } from 'vue';
+import { computed, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue';
 import type { AppSettings, JlptLevel } from '@shared/types';
 import {
   JLPT_LEVELS,
@@ -123,12 +123,21 @@ function snapshot(): AppSettings {
 let saveTimer: ReturnType<typeof setTimeout> | undefined;
 function scheduleSave(): void {
   saved.value = false;
-  if (saveTimer) clearTimeout(saveTimer);
+  if (saveTimer !== undefined) clearTimeout(saveTimer);
   saveTimer = setTimeout(async () => {
+    saveTimer = undefined;
     await saveSettings(snapshot());
     saved.value = true;
     setTimeout(() => (saved.value = false), 1500);
   }, 400);
+}
+
+// 扩展 popup 点击外部即整页销毁：把仍在防抖中的修改立即落盘，避免最后一次输入丢失
+function flushPendingSave(): void {
+  if (saveTimer === undefined) return;
+  clearTimeout(saveTimer);
+  saveTimer = undefined;
+  void saveSettings(snapshot());
 }
 
 onMounted(async () => {
@@ -136,7 +145,9 @@ onMounted(async () => {
   loading.value = false;
   // 在初始回填之后再注册监听，避免回填本身触发保存
   watch(settings, scheduleSave, { deep: true });
+  window.addEventListener('pagehide', flushPendingSave);
 });
+onBeforeUnmount(() => window.removeEventListener('pagehide', flushPendingSave));
 
 // 母语变化 → 界面语言实时跟随
 watch(
